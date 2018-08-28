@@ -7,14 +7,25 @@
     tools:context=".SplashScreen"
 
     >
-
-    <TextView
+    <ImageView
+        android:id="@+id/logoSplash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:textSize="30sp"
-        android:textColor="#000000"
         android:layout_centerInParent="true"
-        />
+        android:src="@drawable/logo" />
+
+    <ImageView
+        android:id="@+id/wholeBusSplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="186dp"
+        android:layout_marginLeft="-40dp"
+        android:layout_marginStart="-40dp"
+        android:src="@drawable/bus"
+        android:layout_alignParentLeft="true" />
+
+
 
 </RelativeLayout>

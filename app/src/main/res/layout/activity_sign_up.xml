@@ -39,12 +39,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                app:errorEnabled="true"
+                >
                 <EditText
                     android:id="@+id/companySignUpEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Company Name" />
+                    android:maxLength="30"
+                    android:hint="Company Name"
+                    android:inputType="text"
+                    />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -52,12 +57,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                app:errorEnabled="true"
+                >
                 <EditText
                     android:id="@+id/userNameSignUpEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
+                    android:maxLength="30"
                     android:hint="@string/username" />
             </android.support.design.widget.TextInputLayout>
 
@@ -66,12 +74,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                app:errorEnabled="true"
+                >
             <EditText
                 android:id="@+id/passwordSignUpEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
+                android:maxLength="30"
                 android:hint="@string/password" />
             </android.support.design.widget.TextInputLayout>
 
@@ -80,12 +91,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                app:errorEnabled="true"
+                >
                 <EditText
                     android:id="@+id/retypePasswordSignUpEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
+                    android:maxLength="30"
                     android:hint="Re-type Password" />
             </android.support.design.widget.TextInputLayout>
 

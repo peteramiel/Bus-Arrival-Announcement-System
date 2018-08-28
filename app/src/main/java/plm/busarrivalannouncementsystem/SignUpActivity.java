@@ -24,19 +24,23 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private EditText mPasswordField;
     private EditText mRetypePasswordField;
     private EditText mCompanyField;
+    private TextInputLayout usernameWrapper;
+    private TextInputLayout passwordWrapper;
+    private TextInputLayout companyWrapper;
+    private TextInputLayout retypeWrapper;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("users");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        final TextInputLayout usernameWrapper = (TextInputLayout) findViewById(R.id.userNameSignUpWrapper);
-        final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordSignUpWrapper);
-        final TextInputLayout companyWrapper = (TextInputLayout) findViewById(R.id.companySignUpWrapper);
-        final TextInputLayout retypeWrapper = (TextInputLayout) findViewById(R.id.retypePasswordSignUpWrapper);
+        usernameWrapper = findViewById(R.id.userNameSignUpWrapper);
+        passwordWrapper = findViewById(R.id.passwordSignUpWrapper);
+        companyWrapper = findViewById(R.id.companySignUpWrapper);
+        retypeWrapper = findViewById(R.id.retypePasswordSignUpWrapper);
         companyWrapper.setHint("Company Name");
         retypeWrapper.setHint("Re-type Password");
-        usernameWrapper.setHint("Username");
+        usernameWrapper.setHint("Email");
         passwordWrapper.setHint("Password");
         mAuth = FirebaseAuth.getInstance();
         mPasswordField=findViewById(R.id.passwordSignUpEditText);
@@ -60,31 +64,36 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
 
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("Required.");
+            usernameWrapper.setError("Required");
             valid = false;
         } else {
-            mEmailField.setError(null);
+            usernameWrapper.setError(null);
         }
         String company = mCompanyField.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            mCompanyField.setError("Required.");
+        if (TextUtils.isEmpty(company)) {
+            companyWrapper.setError("Required");
             valid = false;
         } else {
-            mCompanyField.setError(null);
+            companyWrapper.setError(null);
         }
         String retypePassword = mRetypePasswordField.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            mRetypePasswordField.setError("Required.");
+        if (TextUtils.isEmpty(retypePassword)) {
+            retypeWrapper.setError("Required");
             valid = false;
         } else {
-            mRetypePasswordField.setError(null);
+            retypeWrapper.setError(null);
         }
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("Required.");
+            passwordWrapper.setError("Required");
             valid = false;
         } else {
-            mPasswordField.setError(null);
+            passwordWrapper.setError(null);
+        }
+
+        if(!password.equals(retypePassword)){
+            retypeWrapper.setError("Passwords do not match. Please enter your desired password again");
+            valid=false;
         }
 
         return valid;

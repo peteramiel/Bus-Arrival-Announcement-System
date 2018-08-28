@@ -20,6 +20,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         findViewById(R.id.logoutButton).setOnClickListener(this);
+        findViewById(R.id.newRouteButton).setOnClickListener(this);
         mAuth= FirebaseAuth.getInstance();
     }
 
@@ -42,12 +43,20 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         finish();
     }
 
+    private void newRoute(){
+        Intent newRoute = new Intent (HomeActivity.this,ViewProfileActivity.class);
+        startActivity(newRoute);
+    }
+
     @Override
     public void onClick(View v) {
 
         int i = v.getId();
         if (i == R.id.logoutButton) {
             logout();
+        }
+        if (i == R.id.newRouteButton){
+            newRoute();
         }
 
     }

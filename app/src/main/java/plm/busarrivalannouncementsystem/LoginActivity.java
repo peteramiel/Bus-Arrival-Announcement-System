@@ -25,7 +25,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private EditText mEmailField;
     private EditText mPasswordField;
-
+    private TextInputLayout usernameWrapper;
+    private TextInputLayout passwordWrapper;
     // [START declare_auth]
     private FirebaseAuth mAuth;
 
@@ -37,8 +38,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // Views
         mEmailField = findViewById(R.id.userNameEditText);
         mPasswordField = findViewById(R.id.passwordEditText);
-        final TextInputLayout usernameWrapper = (TextInputLayout) findViewById(R.id.userNameSignInWrapper);
-        final TextInputLayout passwordWrapper = (TextInputLayout) findViewById(R.id.passwordSignInWrapper);
+        usernameWrapper = findViewById(R.id.userNameSignInWrapper);
+        passwordWrapper = findViewById(R.id.passwordSignInWrapper);
         usernameWrapper.setHint("Username");
         passwordWrapper.setHint("Password");
         // Buttons
@@ -122,18 +123,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailField.setError("Required.");
+            usernameWrapper.setError("Required");
             valid = false;
         } else {
-            mEmailField.setError(null);
+            usernameWrapper.setError(null);
         }
 
         String password = mPasswordField.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            mPasswordField.setError("Required.");
+            passwordWrapper.setError("Required");
             valid = false;
         } else {
-            mPasswordField.setError(null);
+            passwordWrapper.setError(null);
         }
 
         return valid;
