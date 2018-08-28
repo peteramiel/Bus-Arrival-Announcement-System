@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "191714771789",
+    "firebase_url": "https://bus-arrival-announcement.firebaseio.com",
+    "project_id": "bus-arrival-announcement",
+    "storage_bucket": "bus-arrival-announcement.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191714771789:android:4b905e8f4c8631a1",
+        "android_client_info": {
+          "package_name": "plm.busarrivalannouncementsystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "191714771789-8nh08580o5hspkibgvj0c0f1tu7io88v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "plm.busarrivalannouncementsystem",
+            "certificate_hash": "adb70314ff3c4743aba95c34c26345da66c0da37"
+          }
+        },
+        {
+          "client_id": "191714771789-303s7ud1moghqufd3u7ql3h18mm6c49v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq6sx8wFG8yaO44uDvDoX210UEfeJGkJo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "191714771789-303s7ud1moghqufd3u7ql3h18mm6c49v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

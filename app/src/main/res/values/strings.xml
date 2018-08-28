@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Bus Arrival Announcement System</string>
+    <string name="sign_in">Sign In</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="loading">Please Wait..</string>
+    <string name="auth_failed">Authentication Failed! Please try again.</string>
+    <string name="emailpassword_status_fmt">String 1</string>
+    <string name="firebase_status_fmt">Firebase</string>
+    <string name="signed_out">You\'re Signed Out</string>
+    <string name="new_route">Create New Route</string>
+    <string name="select_route">Select a Route</string>
+    <string name="sign_up">Sign Up</string>
+</resources>
