@@ -14,7 +14,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 public class SplashScreen extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 5000;
+    private static int SPLASH_TIME_OUT = 4000;
     ImageView logo;
     ImageView logo2;
     @Override

@@ -2,6 +2,8 @@ package plm.busarrivalannouncementsystem;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,6 +22,21 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         mProgressDialog.show();
+    }
+
+    public boolean checkInternetConnection(){
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            //we are connected to a network
+            connected = true;
+        }
+        else{
+            connected = false;
+        }
+
+        return connected;
     }
 
     public void hideProgressDialog() {

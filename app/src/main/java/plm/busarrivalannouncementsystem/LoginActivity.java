@@ -1,6 +1,9 @@
 package plm.busarrivalannouncementsystem;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -19,6 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "EmailPassword";
@@ -27,6 +32,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private EditText mPasswordField;
     private TextInputLayout usernameWrapper;
     private TextInputLayout passwordWrapper;
+    private Dialog popupNoInternet;
     // [START declare_auth]
     private FirebaseAuth mAuth;
 
@@ -35,6 +41,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Views
         mEmailField = findViewById(R.id.userNameEditText);
         mPasswordField = findViewById(R.id.passwordEditText);
@@ -45,10 +52,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // Buttons
         findViewById(R.id.signInButton).setOnClickListener(this);
         findViewById(R.id.goSignUpButton).setOnClickListener(this);
-
+//        findViewById(R.id.retryConnectionButton).setOnClickListener(this);
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
+        popupNoInternet = new Dialog(LoginActivity.this);
+        popupNoInternet.setContentView(R.layout.popup_no_internet);
+        popupNoInternet.findViewById(R.id.retryConnectionButton).setOnClickListener(this);
+
     }
 
 
@@ -58,21 +69,33 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        checkConnection();
+            Log.d(TAG, "onStartUser:" + currentUser);
+            if(currentUser== null){
+
+            }
+            else{
+                Intent gotoHome = new Intent(LoginActivity.this,HomeActivity.class);
+                startActivity(gotoHome);
+            }
+
 
 //        Toast.makeText(LoginActivity.this, currentUser.getEmail().toString(),
 //                Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onStartUser:" + currentUser);
-        if(currentUser== null){
 
-        }
-       else{
-            Intent gotoHome = new Intent(LoginActivity.this,HomeActivity.class);
-            startActivity(gotoHome);
-        }
 
     }
     // [END on_start_check_user]
-
+    private void checkConnection(){
+        if (!checkInternetConnection()) {
+            Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+            Objects.requireNonNull(popupNoInternet.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            popupNoInternet.show();
+        }else{
+            Toast.makeText(getApplicationContext(),"Connection Established",Toast.LENGTH_SHORT).show();
+            popupNoInternet.dismiss();
+        }
+    }
 
     private void signIn(String email, String password) {
 //        Log.d(TAG, "signIn:" + email);
@@ -150,6 +173,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
         } else if (i == R.id.goSignUpButton){
             goSignUp();
+        } else if (i == R.id.retryConnectionButton){
+            checkConnection();
         }
 
 //          else if (i == R.id.verify_email_button) {

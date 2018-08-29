@@ -1,12 +1,15 @@
 package plm.busarrivalannouncementsystem;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,6 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 public class SignUpActivity extends BaseActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private EditText mEmailField;
@@ -28,12 +33,16 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private TextInputLayout passwordWrapper;
     private TextInputLayout companyWrapper;
     private TextInputLayout retypeWrapper;
+    private Button getStarted;
+    Dialog signUpDialog;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("users");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+
         usernameWrapper = findViewById(R.id.userNameSignUpWrapper);
         passwordWrapper = findViewById(R.id.passwordSignUpWrapper);
         companyWrapper = findViewById(R.id.companySignUpWrapper);
@@ -50,6 +59,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         // Write a message to the database
 
         findViewById(R.id.signUpButton).setOnClickListener(this);
+        signUpDialog = new Dialog(this);
+        signUpDialog.setContentView(R.layout.popup_sign_up);
+        signUpDialog.findViewById(R.id.getStartedButton).setOnClickListener(this);
     }
 
     @Override
@@ -113,9 +125,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                             myRef.setValue(mCompanyField.getText().toString());
                             myRef.child("company").push().setValue(mCompanyField.getText().toString());
                             myRef.child("email").push().setValue(mEmailField.getText().toString());
-                            Intent signInNewUser = new Intent(SignUpActivity.this,HomeActivity.class);
-                            startActivity(signInNewUser);
-                            finish();
+                            newUserCreated();
                         } else {
                             // If sign in fails, display a message to the user.
 
@@ -129,6 +139,11 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                 });
     }
 
+    public void newUserCreated(){
+            Objects.requireNonNull(signUpDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            signUpDialog.show();
+    }
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -137,7 +152,12 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         if (i == R.id.signUpButton) {
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
-
+        if (i == R.id.getStartedButton){
+            signUpDialog.dismiss();
+            Intent signInNewUser = new Intent(SignUpActivity.this,HomeActivity.class);
+            startActivity(signInNewUser);
+            finish();
+        }
 //          else if (i == R.id.verify_email_button) {
 //            sendEmailVerification();
 //        }
