@@ -56,9 +56,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
-        popupNoInternet = new Dialog(LoginActivity.this);
-        popupNoInternet.setContentView(R.layout.popup_no_internet);
-        popupNoInternet.findViewById(R.id.retryConnectionButton).setOnClickListener(this);
 
     }
 
@@ -77,25 +74,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             else{
                 Intent gotoHome = new Intent(LoginActivity.this,HomeActivity.class);
                 startActivity(gotoHome);
+                finish();
             }
 
-
-//        Toast.makeText(LoginActivity.this, currentUser.getEmail().toString(),
-//                Toast.LENGTH_SHORT).show();
 
 
     }
     // [END on_start_check_user]
-    private void checkConnection(){
-        if (!checkInternetConnection()) {
-            Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
-            Objects.requireNonNull(popupNoInternet.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            popupNoInternet.show();
-        }else{
-            Toast.makeText(getApplicationContext(),"Connection Established",Toast.LENGTH_SHORT).show();
-            popupNoInternet.dismiss();
-        }
-    }
+
+//    private void checkConnection(){
+//        if (!checkInternetConnection()) {
+//            Toast.makeText(getApplicationContext(),"Network error. Check your network connection and try again.",Toast.LENGTH_SHORT).show();
+//            Objects.requireNonNull(popupNoInternet.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//            popupNoInternet.show();
+//        }else{
+//            Toast.makeText(getApplicationContext(),"Connection Established",Toast.LENGTH_SHORT).show();
+//            popupNoInternet.dismiss();
+//        }
+//    }
 
     private void signIn(String email, String password) {
 //        Log.d(TAG, "signIn:" + email);
@@ -173,8 +169,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
         } else if (i == R.id.goSignUpButton){
             goSignUp();
-        } else if (i == R.id.retryConnectionButton){
-            checkConnection();
         }
 
 //          else if (i == R.id.verify_email_button) {

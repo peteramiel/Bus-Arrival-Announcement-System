@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,10 +22,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class SignUpActivity extends BaseActivity implements View.OnClickListener {
-    private FirebaseAuth mAuth;
+
     private EditText mEmailField;
     private EditText mPasswordField;
     private EditText mRetypePasswordField;
@@ -33,14 +36,14 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private TextInputLayout passwordWrapper;
     private TextInputLayout companyWrapper;
     private TextInputLayout retypeWrapper;
-    private Button getStarted;
     Dialog signUpDialog;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("users");
+    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
 
 
         usernameWrapper = findViewById(R.id.userNameSignUpWrapper);
@@ -51,24 +54,27 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         retypeWrapper.setHint("Re-type Password");
         usernameWrapper.setHint("Email");
         passwordWrapper.setHint("Password");
-        mAuth = FirebaseAuth.getInstance();
+
         mPasswordField=findViewById(R.id.passwordSignUpEditText);
         mEmailField=findViewById(R.id.userNameSignUpEditText);
         mRetypePasswordField=findViewById(R.id.retypePasswordSignUpEditText);
         mCompanyField=findViewById(R.id.companySignUpEditText);
-        // Write a message to the database
 
         findViewById(R.id.signUpButton).setOnClickListener(this);
         signUpDialog = new Dialog(this);
         signUpDialog.setContentView(R.layout.popup_sign_up);
-        signUpDialog.findViewById(R.id.getStartedButton).setOnClickListener(this);
+        Button getStarted = signUpDialog.findViewById(R.id.getStartedButton);
+        getStarted.setOnClickListener(this);
+
+
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
     }
 
     private boolean validateForm() {
@@ -122,9 +128,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            myRef.setValue(mCompanyField.getText().toString());
-                            myRef.child("company").push().setValue(mCompanyField.getText().toString());
-                            myRef.child("email").push().setValue(mEmailField.getText().toString());
+//                            mDatabase.child("users").child(userId).setValue(user);
+                            myRef.child(mCompanyField.getText().toString()).child("company").setValue(mCompanyField.getText().toString());
+                            myRef.child(mCompanyField.getText().toString()).child("email").setValue(mEmailField.getText().toString());
                             newUserCreated();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -133,28 +139,25 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                                     Toast.LENGTH_SHORT).show();
 
                         }
-
                         hideProgressDialog();
                     }
                 });
     }
 
     public void newUserCreated(){
-            Objects.requireNonNull(signUpDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            signUpDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             signUpDialog.show();
     }
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
-//        if (i == R.id.email_create_account_button) {
-//            createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         if (i == R.id.signUpButton) {
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
         if (i == R.id.getStartedButton){
             signUpDialog.dismiss();
-            Intent signInNewUser = new Intent(SignUpActivity.this,HomeActivity.class);
+            Intent signInNewUser = new Intent(this,HomeActivity.class);
             startActivity(signInNewUser);
             finish();
         }
