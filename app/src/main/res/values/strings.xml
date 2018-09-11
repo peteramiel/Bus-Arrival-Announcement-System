@@ -17,4 +17,15 @@
     <string name="no_connection_message">Can\'t connect to the server. Please check your internet connection.</string>
     <string name="retry">Retry</string>
     <string name="logout">Logout</string>
+    <string name="title_activity_bottom_navigation">BottomNavigation</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="home">Home</string>
+    <string name="help">Help</string>
+    <string name="profile">Profile</string>
+    <string name="find_route">Find Route</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
 </resources>
