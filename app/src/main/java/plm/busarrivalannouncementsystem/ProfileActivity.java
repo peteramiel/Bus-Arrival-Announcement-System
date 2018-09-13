@@ -1,5 +1,6 @@
 package plm.busarrivalannouncementsystem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -23,5 +24,11 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, HomeActivity.class));
+        super.onBackPressed();
+    }
 
 }

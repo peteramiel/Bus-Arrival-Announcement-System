@@ -27,5 +27,12 @@
     <string name="find_route">Find Route</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="title_activity_get_started">GetStartedActivity</string>
 
 </resources>

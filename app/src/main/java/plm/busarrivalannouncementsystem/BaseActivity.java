@@ -165,7 +165,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     private void viewFind() {
         startActivity(new Intent(this, FindActivity.class));
-        finish();
+
     }
 
     private void viewHelp() {
@@ -173,9 +173,4 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(this, HomeActivity.class));
-        super.onBackPressed();
-    }
 }

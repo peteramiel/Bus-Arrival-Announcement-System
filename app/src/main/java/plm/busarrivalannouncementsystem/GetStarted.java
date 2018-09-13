@@ -1,36 +1,42 @@
 package plm.busarrivalannouncementsystem;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 
-public class HelpActivity extends WizardBaseActivity implements View.OnClickListener{
+public class GetStarted extends FragmentActivity implements View.OnClickListener {
     private ViewPager viewPager;
     private View indicator1;
     private View indicator2;
     private View indicator3;
     private View indicator4;
     private View indicator5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_help);
         super.onCreate(savedInstanceState);
-        displayDrawer();
+        setContentView(R.layout.activity_get_started);
         indicator1 = (View) findViewById(R.id.indicator1);
         indicator2 = (View) findViewById(R.id.indicator2);
         indicator3 = (View) findViewById(R.id.indicator3);
         indicator4 = (View) findViewById(R.id.indicator4);
         indicator5 = (View) findViewById(R.id.indicator5);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
-        viewPager.addOnPageChangeListener(new WizardPageChangeListener());
+        viewPager.setAdapter(new GetStarted.ViewPagerAdapter(getSupportFragmentManager()));
+        viewPager.addOnPageChangeListener(new GetStarted.WizardPageChangeListener());
         updateIndicators(0);
+
 
     }
 
@@ -38,6 +44,7 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
     public void onClick(View view) {
 
     }
+
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -50,12 +57,12 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
         @Override
         public Fragment getItem(int position) {
             return new HelpWizardFragment(position,
-                    R.layout.help_page1,
-                    R.layout.help_page2,
-                    R.layout.help_page3,
-                    R.layout.help_page4,
-                    R.layout.help_page5
-                    );
+                    R.layout.get_started_page1,
+                    R.layout.get_started_page2,
+                    R.layout.get_started_page3,
+                    R.layout.get_started_page4,
+                    R.layout.get_started_page5
+            );
         }
 
         @Override
@@ -63,7 +70,28 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
             return WIZARD_PAGES_COUNT;
         }
 
+        @Override
+        public Object instantiateItem(View collection, final int pos) {
+            LayoutInflater inflater = (LayoutInflater) collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View page = inflater.inflate(R.layout.activity_get_started, null);
+            page.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int i = view.getId();
+                    if (i == R.id.getStarted) {
+                        Intent start = new Intent(GetStarted.this, HomeActivity.class);
+                        startActivity(start);
+                        finish();
+                    }
+                }
+            });
+            ((ViewPager) collection).addView(page,0);
+            return page;
+        }
+
     }
+
+
     private class WizardPageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
@@ -83,7 +111,6 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
         public void onPageSelected(int position) {
             updateIndicators(position);
         }
-
     }
 
     @Override
@@ -99,6 +126,7 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
     }
+
     public void updateIndicators(int position) {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int resizeValue = (int) TypedValue.applyDimension(
@@ -217,6 +245,4 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
                 break;
         }
     }
-
-
 }

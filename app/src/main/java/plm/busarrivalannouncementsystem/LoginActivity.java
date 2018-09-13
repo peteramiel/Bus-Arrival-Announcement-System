@@ -27,7 +27,6 @@ import java.util.Objects;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "EmailPassword";
-
     private EditText mEmailField;
     private EditText mPasswordField;
     private TextInputLayout usernameWrapper;
@@ -80,25 +79,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
 
     }
-    // [END on_start_check_user]
 
-//    private void checkConnection(){
-//        if (!checkInternetConnection()) {
-//            Toast.makeText(getApplicationContext(),"Network error. Check your network connection and try again.",Toast.LENGTH_SHORT).show();
-//            Objects.requireNonNull(popupNoInternet.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//            popupNoInternet.show();
-//        }else{
-//            Toast.makeText(getApplicationContext(),"Connection Established",Toast.LENGTH_SHORT).show();
-//            popupNoInternet.dismiss();
-//        }
-//    }
 
     private void signIn(String email, String password) {
-//        Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
             return;
         }
-
         showProgressDialog();
 
         // [START sign_in_with_email]
@@ -110,7 +96,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             // Sign in success, update UI with the signed-in user's information
 
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Intent gotoHome = new Intent(LoginActivity.this, HomeActivity.class);
+                            Intent gotoHome = new Intent(LoginActivity.this, GetStarted.class);
                             startActivity(gotoHome);
 
                         } else {
@@ -176,5 +162,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //        }
     }
 
+
+    @Override
+    public void onBackPressed() {
+//        startActivity(new Intent(this, HomeActivity.class));
+//        CREATE A DIALOG BOX TO EXIT
+        super.onBackPressed();
+    }
 
 }

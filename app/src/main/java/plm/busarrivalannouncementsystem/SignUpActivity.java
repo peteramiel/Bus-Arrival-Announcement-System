@@ -44,8 +44,6 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-
-
         usernameWrapper = findViewById(R.id.userNameSignUpWrapper);
         passwordWrapper = findViewById(R.id.passwordSignUpWrapper);
         companyWrapper = findViewById(R.id.companySignUpWrapper);
@@ -65,8 +63,6 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         signUpDialog.setContentView(R.layout.popup_sign_up);
         Button getStarted = signUpDialog.findViewById(R.id.getStartedButton);
         getStarted.setOnClickListener(this);
-
-
 
     }
 
@@ -157,12 +153,16 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         }
         if (i == R.id.getStartedButton){
             signUpDialog.dismiss();
-            Intent signInNewUser = new Intent(this,HomeActivity.class);
+            Intent signInNewUser = new Intent(this,GetStarted.class);
             startActivity(signInNewUser);
             finish();
         }
-//          else if (i == R.id.verify_email_button) {
-//            sendEmailVerification();
-//        }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, LoginActivity.class));
+        super.onBackPressed();
     }
 }
