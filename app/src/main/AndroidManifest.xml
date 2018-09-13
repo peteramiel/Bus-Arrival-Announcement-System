@@ -43,6 +43,9 @@
             android:name=".ProfileActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
+            android:name=".EditProfileActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".HelpActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity

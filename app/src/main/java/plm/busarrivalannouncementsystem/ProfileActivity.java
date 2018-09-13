@@ -12,15 +12,16 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_profile);
         displayDrawer();
         super.onCreate(savedInstanceState);
+        findViewById(R.id.editProfileButton).setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
-//        if (i == R.id.newRouteButton){
-//            newRoute();
-//        }
+        if (i == R.id.editProfileButton){
+            startActivity(new Intent (this,EditProfileActivity.class));
+        }
 
     }
 
