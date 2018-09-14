@@ -37,6 +37,6 @@
         android:layout_marginRight="30dp"
         android:background="@color/colorAccent"
         android:textColor="@color/colorWhite"
-        android:text="@string/get_started" />
+        android:text="Swipe Left to Continue!" />
 
 </RelativeLayout>

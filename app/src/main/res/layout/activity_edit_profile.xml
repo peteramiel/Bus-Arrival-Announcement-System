@@ -65,7 +65,9 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Company Name"/>
+                    android:hint="Company Name"
+                    android:id="@+id/editCompanyTextView"
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -77,7 +79,9 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Mission"/>
+                    android:hint="Mission"
+                    android:id="@+id/editMissionTextView"
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -89,17 +93,20 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Vision"/>
+                    android:hint="Vision"
+                    android:id="@+id/editVisionTextView"
+                    />
 
             </android.support.design.widget.TextInputLayout>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:text="SAVE"
+        android:background="@drawable/rounded_button_green"
+        android:id="@+id/saveEditProfileButton"
+        android:text="Save"
         android:textColor="@color/colorWhite"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"/>
 

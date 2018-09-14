@@ -11,6 +11,16 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="My header title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:id="@+id/headerCompanyTextView"
+        android:text="Company Name"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/headerEmailTextView"
+        android:text="Email@gmail.com"
+        android:textSize="18sp"
+        />
 </LinearLayout>

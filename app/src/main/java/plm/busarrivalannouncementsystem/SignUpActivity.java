@@ -36,8 +36,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private TextInputLayout passwordWrapper;
     private TextInputLayout companyWrapper;
     private TextInputLayout retypeWrapper;
+    private String userId;
     Dialog signUpDialog;
-    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,9 +125,13 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-//                            mDatabase.child("users").child(userId).setValue(user);
-                            myRef.child(mCompanyField.getText().toString()).child("company").setValue(mCompanyField.getText().toString());
-                            myRef.child(mCompanyField.getText().toString()).child("email").setValue(mEmailField.getText().toString());
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            userId=user.getUid();
+                            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
+                            myRef.child(userId).child("company").setValue(mCompanyField.getText().toString());
+                            myRef.child(userId).child("email").setValue(mEmailField.getText().toString());
+                            myRef.child(userId).child("mission").setValue("Not Set");
+                            myRef.child(userId).child("vision").setValue("Not Set");
                             newUserCreated();
                         } else {
                             // If sign in fails, display a message to the user.

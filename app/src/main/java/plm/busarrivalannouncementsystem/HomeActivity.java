@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -11,15 +12,30 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 
 public class HomeActivity extends BaseActivity implements View.OnClickListener{
     final String TAG = "HomeActivity";
-    private static final int ERROR_DIALOG_REQUEST = 9001;
+    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
+    FirebaseAuth mAuth;
+    private String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_home);
+        mAuth= FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        userId=user.getUid();
+
         displayDrawer();
         if(isServicesOK()){
 
@@ -27,24 +43,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
     }
 
-    public boolean isServicesOK(){
 
-        Log.d(TAG,"isServicesOK: Checking Google Services if OK");
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(HomeActivity.this);
-        if(available== ConnectionResult.SUCCESS){
-            Log.d(TAG,"isServicesOK: Google play services is available");
-            return true;
-        }else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            Log.d(TAG,"isServicesOK: Solvable Error has been found");
-            Dialog dialog = GoogleApiAvailability.getInstance().
-                    getErrorDialog(HomeActivity.this,
-                    available,ERROR_DIALOG_REQUEST);
-            dialog.show();
-        }else{
-            Toast.makeText(this,"Can't make map request",Toast.LENGTH_LONG).show();
-        }
-        return false;
-    }
+
 
     @Override
     public void onStart() {

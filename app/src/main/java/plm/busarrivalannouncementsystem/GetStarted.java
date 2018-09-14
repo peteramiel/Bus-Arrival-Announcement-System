@@ -15,14 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-public class GetStarted extends FragmentActivity implements View.OnClickListener {
+public class GetStarted extends FragmentActivity{
     private ViewPager viewPager;
     private View indicator1;
     private View indicator2;
     private View indicator3;
     private View indicator4;
     private View indicator5;
-
+    private int WIZARD_PAGES_COUNT = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +32,7 @@ public class GetStarted extends FragmentActivity implements View.OnClickListener
         indicator3 = (View) findViewById(R.id.indicator3);
         indicator4 = (View) findViewById(R.id.indicator4);
         indicator5 = (View) findViewById(R.id.indicator5);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager =  findViewById(R.id.viewPager);
         viewPager.setAdapter(new GetStarted.ViewPagerAdapter(getSupportFragmentManager()));
         viewPager.addOnPageChangeListener(new GetStarted.WizardPageChangeListener());
         updateIndicators(0);
@@ -40,15 +40,11 @@ public class GetStarted extends FragmentActivity implements View.OnClickListener
 
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
 
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
 
-        private int WIZARD_PAGES_COUNT = 5;
+
 
         public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -70,24 +66,6 @@ public class GetStarted extends FragmentActivity implements View.OnClickListener
             return WIZARD_PAGES_COUNT;
         }
 
-        @Override
-        public Object instantiateItem(View collection, final int pos) {
-            LayoutInflater inflater = (LayoutInflater) collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View page = inflater.inflate(R.layout.activity_get_started, null);
-            page.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int i = view.getId();
-                    if (i == R.id.getStarted) {
-                        Intent start = new Intent(GetStarted.this, HomeActivity.class);
-                        startActivity(start);
-                        finish();
-                    }
-                }
-            });
-            ((ViewPager) collection).addView(page,0);
-            return page;
-        }
 
     }
 
@@ -110,6 +88,10 @@ public class GetStarted extends FragmentActivity implements View.OnClickListener
         @Override
         public void onPageSelected(int position) {
             updateIndicators(position);
+            if (position== WIZARD_PAGES_COUNT){
+                startActivity(new Intent(GetStarted.this, HomeActivity.class));
+                finish();
+            }
         }
     }
 

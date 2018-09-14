@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -21,13 +22,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -40,6 +51,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     //Renders the Drawer
     void displayDrawer() {
+        SharedPreferences userPref = getSharedPreferences("User", 0);
+        String company = userPref.getString("company", "");
+        String email = userPref.getString("email", "");
         Toolbar mToolbar = findViewById(R.id.nav_action_bar);
         setSupportActionBar(mToolbar);
         DrawerLayout mDrawerLayout = findViewById(R.id.drawerLayoutHome);
@@ -48,8 +62,32 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         mToggle.syncState();
         NavigationView navigationView = findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navCompany = headerView.findViewById(R.id.headerCompanyTextView);
+        TextView navEmail =  headerView.findViewById(R.id.headerEmailTextView);
+        navCompany.setText(company);
+        navEmail.setText(email);
     }
 
+    public boolean isServicesOK(){
+        String TAG = "Base Activity";
+        final int ERROR_DIALOG_REQUEST = 9001;
+        Log.d(TAG,"isServicesOK: Checking Google Services if OK");
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+        if(available== ConnectionResult.SUCCESS){
+            Log.d(TAG,"isServicesOK: Google play services is available");
+            return true;
+        }else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            Log.d(TAG,"isServicesOK: Solvable Error has been found");
+            Dialog dialog = GoogleApiAvailability.getInstance().
+                    getErrorDialog(this,
+                            available,ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }else{
+            Toast.makeText(this,"Can't make map request",Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,8 +185,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void logout() {
-        mAuth.signOut();
-        Intent logout = new Intent(this, LoginActivity.class);
+//        mAuth.signOut();
+        Intent logout = new Intent(this, ConnectBluetoothModule.class);
         startActivity(logout);
         finish();
     }
