@@ -68,7 +68,8 @@
         <activity
             android:name=".GetStarted"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ChangePasswordActivity"></activity>
+        <activity android:name=".ChangePasswordActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

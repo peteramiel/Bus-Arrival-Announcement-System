@@ -44,10 +44,10 @@
                     android:layout_marginEnd="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="176dp"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:backgroundTint="@color/colorAccent"
                     android:clickable="true"
                     android:focusable="true"
-                    app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
+                    app:srcCompat="@drawable/ic_add_circle_outline_white_24dp"
                     tools:ignore="UnusedAttribute" />
 
                 <LinearLayout
@@ -102,7 +102,7 @@
 
                         <Button
                             android:id="@+id/btEditProfileSave"
-                            android:layout_width="wrap_content"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/rounded_button_blue"
                             android:text="SAVE"
@@ -112,7 +112,7 @@
 
                         <Button
                             android:id="@+id/btEditProfileChangePassword"
-                            android:layout_width="wrap_content"
+                            android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/rounded_button_blue"
                             android:text="CHANGE PASSWORD"
