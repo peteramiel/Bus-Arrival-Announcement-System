@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public class ConnectBluetoothModule extends BaseActivity implements View.OnClickListener {
 
-    private final String DEVICE_ADDRESS = "20:15:11:23:93:85"; //MAC Address of Bluetooth Module
+    private final String DEVICE_ADDRESS = "00:18:E4:34:E4:0F"; //MAC Address of Bluetooth Module
     private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
     private BluetoothDevice device;
