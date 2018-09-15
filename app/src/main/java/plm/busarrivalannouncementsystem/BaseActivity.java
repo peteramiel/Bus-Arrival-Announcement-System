@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -51,9 +53,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     //Renders the Drawer
     void displayDrawer() {
-        SharedPreferences userPref = getSharedPreferences("User", 0);
-        String company = userPref.getString("company", "");
-        String email = userPref.getString("email", "");
+
         Toolbar mToolbar = findViewById(R.id.nav_action_bar);
         setSupportActionBar(mToolbar);
         DrawerLayout mDrawerLayout = findViewById(R.id.drawerLayoutHome);
@@ -62,6 +62,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         mToggle.syncState();
         NavigationView navigationView = findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
+        SharedPreferences userPref = getSharedPreferences("User", 0);
+        final String company = userPref.getString("company", "");
+        final String email = userPref.getString("email", "");
         View headerView = navigationView.getHeaderView(0);
         TextView navCompany = headerView.findViewById(R.id.headerCompanyTextView);
         TextView navEmail =  headerView.findViewById(R.id.headerEmailTextView);
@@ -176,19 +179,38 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             viewFind();
         } else if (i == R.id.nav_help) {
             viewHelp();
+        }else if (i == R.id.nav_bluetooth) {
+            viewBluetoothConnect();
         } else if (i == R.id.nav_logout) {
-            logout();
+            logout(this);
         }
         DrawerLayout drawer = findViewById(R.id.drawerLayoutHome);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void logout() {
-//        mAuth.signOut();
-        Intent logout = new Intent(this, ConnectBluetoothModule.class);
-        startActivity(logout);
+    private void viewBluetoothConnect() {
+        startActivity(new Intent(this,ConnectBluetoothModule.class));
         finish();
+    }
+
+    private void logout(final Activity act) {
+        new AlertDialog.Builder(this)
+                .setTitle("Logout?")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences userPref = getSharedPreferences("User", 0);
+                        SharedPreferences.Editor editor = userPref.edit();
+                        editor.clear();
+                        editor.apply();
+                        mAuth.signOut();
+                        act.startActivity(new Intent(act,LoginActivity.class));
+                        finish();
+                    }
+                }).create().show();
+
     }
 
     private void viewHome() {

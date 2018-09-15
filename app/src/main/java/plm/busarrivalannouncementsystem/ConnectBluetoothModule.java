@@ -4,10 +4,13 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.silvestrpredko.dotprogressbar.DotProgressBar;
@@ -36,6 +39,7 @@ public class ConnectBluetoothModule extends BaseActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_bluetooth_module);
         displayDrawer();
+
         dotProgressBar = findViewById(R.id.dot_progress_bar);
 
         if (bluetoothEnabled()) {
@@ -141,5 +145,12 @@ public class ConnectBluetoothModule extends BaseActivity implements View.OnClick
     protected void onStart()
     {
         super.onStart();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, HomeActivity.class));
+        finish();
+        super.onBackPressed();
     }
 }

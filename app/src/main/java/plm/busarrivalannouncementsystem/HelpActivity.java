@@ -1,6 +1,8 @@
 package plm.busarrivalannouncementsystem;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.TextView;
 
 public class HelpActivity extends WizardBaseActivity implements View.OnClickListener{
     private ViewPager viewPager;

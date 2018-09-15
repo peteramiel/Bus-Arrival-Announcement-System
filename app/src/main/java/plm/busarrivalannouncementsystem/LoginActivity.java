@@ -77,6 +77,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             }
             else{
+
                 Intent gotoHome = new Intent(LoginActivity.this,HomeActivity.class);
                 startActivity(gotoHome);
                 finish();
@@ -100,7 +101,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
+                            DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
                             FirebaseUser user = mAuth.getCurrentUser();
                             final String userId=user.getUid();
                             myRef.addValueEventListener(new ValueEventListener() {
@@ -121,7 +122,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                                 }
                             });
-                            Intent gotoHome = new Intent(LoginActivity.this, GetStarted.class);
+                            Intent gotoHome = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(gotoHome);
 
                         } else {

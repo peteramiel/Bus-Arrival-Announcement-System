@@ -2,9 +2,11 @@ package plm.busarrivalannouncementsystem;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         userId=user.getUid();
 
         displayDrawer();
+
         if(isServicesOK()){
 
         }
@@ -57,7 +60,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, HomeActivity.class));
+//        startActivity(new Intent(this, HomeActivity.class));
+//        finish();
+        //SHOULD LOGOUT
         super.onBackPressed();
     }
 
