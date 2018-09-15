@@ -1,6 +1,8 @@
 package plm.busarrivalannouncementsystem;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,5 +40,10 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
             myRef.child(userId).child("vision").setValue(mVisionField.getText().toString());
             startActivity(new Intent(this,HomeActivity.class));
         }
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 }

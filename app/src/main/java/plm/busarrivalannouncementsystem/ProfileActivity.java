@@ -1,8 +1,10 @@
 package plm.busarrivalannouncementsystem;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -51,6 +53,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         displayDrawer();
 
 
+
         super.onCreate(savedInstanceState);
         findViewById(R.id.editProfileButton).setOnClickListener(this);
     }
@@ -68,6 +71,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, HomeActivity.class));
+        finish();
         super.onBackPressed();
     }
 

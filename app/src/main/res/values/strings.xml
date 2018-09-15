@@ -34,5 +34,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_get_started">GetStartedActivity</string>
+    <string name="connect_to_bluetooth_display">Connect to Bluetooth Display</string>
 
 </resources>
