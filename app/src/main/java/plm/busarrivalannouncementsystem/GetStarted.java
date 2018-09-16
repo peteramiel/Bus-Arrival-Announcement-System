@@ -22,7 +22,7 @@ public class GetStarted extends FragmentActivity{
     private View indicator3;
     private View indicator4;
     private View indicator5;
-    private int WIZARD_PAGES_COUNT = 5;
+    private int WIZARD_PAGES_COUNT = 6;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +57,8 @@ public class GetStarted extends FragmentActivity{
                     R.layout.get_started_page2,
                     R.layout.get_started_page3,
                     R.layout.get_started_page4,
-                    R.layout.get_started_page5
+                    R.layout.get_started_page5,
+                    R.layout.get_started_page6
             );
         }
 
@@ -88,7 +89,7 @@ public class GetStarted extends FragmentActivity{
         @Override
         public void onPageSelected(int position) {
             updateIndicators(position);
-            if (position== WIZARD_PAGES_COUNT){
+            if (position== WIZARD_PAGES_COUNT-1){
                 startActivity(new Intent(GetStarted.this, HomeActivity.class));
                 finish();
             }

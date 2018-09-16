@@ -18,8 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends BaseActivity implements View.OnClickListener{
-    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-    FirebaseAuth mAuth;
+
 
     private String userId;
     TextView companyTextView;
@@ -29,12 +28,14 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_profile);
-        mAuth= FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        userId=user.getUid();
+
         companyTextView = findViewById(R.id.profileCompanyTextView);
         missionTextView= findViewById(R.id.profileMissionTextView);
         visionTextView= findViewById(R.id.profileVisionTextView);
+        mAuth= FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        userId=user.getUid();
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

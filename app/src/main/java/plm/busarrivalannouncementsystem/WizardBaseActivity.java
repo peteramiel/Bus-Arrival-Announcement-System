@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +46,14 @@ public class WizardBaseActivity extends FragmentActivity implements NavigationVi
         mToggle.syncState();
         NavigationView navigationView = findViewById(R.id.navView);
         navigationView.setNavigationItemSelectedListener(this);
+        SharedPreferences userPref = getSharedPreferences("User", 0);
+        final String company = userPref.getString("company", "");
+        final String email = userPref.getString("email", "");
+        View headerView = navigationView.getHeaderView(0);
+        TextView navCompany = headerView.findViewById(R.id.headerCompanyTextView);
+        TextView navEmail =  headerView.findViewById(R.id.headerEmailTextView);
+        navCompany.setText(company);
+        navEmail.setText(email);
     }
 
     @Override

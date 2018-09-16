@@ -229,7 +229,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void viewHelp() {
-        startActivity(new Intent(this, HelpActivity.class));
+        startActivity(new Intent(this, GetStarted.class));
         finish();
     }
 

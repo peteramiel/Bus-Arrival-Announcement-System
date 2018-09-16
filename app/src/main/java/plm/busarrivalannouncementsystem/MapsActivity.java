@@ -1,8 +1,11 @@
 package plm.busarrivalannouncementsystem;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -11,35 +14,82 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class MapsActivity extends BaseActivity implements OnMapReadyCallback{
+public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener{
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
+//        mAuth= FirebaseAuth.getInstance();
+//        FirebaseUser user = mAuth.getCurrentUser();
+//        String userId=user.getUid();
+//        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+////                    LatLng latLng = new LatLng(ds.child(userId).child("routes").chi.getValue(String.class),
+////                            longitude);
+////                    addNewMarker(LatLng latLng, String newStopName);
+////
+////                    companyTextView.setText(ds.child(userId).child("company").getValue(String.class));
+////                    missionTextView.setText(ds.child(userId).child("mission").getValue(String.class));
+////                    visionTextView.setText(ds.child(userId).child("vision").getValue(String.class));
+//                }
+//
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+        // Setting a click event handler for the map
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(final LatLng latLng) {
+                setNewMarkerInformation(latLng);
+            }
+        });
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
 
@@ -52,33 +102,62 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback{
 
             mMap.setMyLocationEnabled(true);
             Log.d(TAG, "onMapReady: location enabled");
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
             init();
         }
-
     }
     private String TAG = "MapsActivity";
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final float DEFAULT_ZOOM = 15f;
+    private static final float DEFAULT_ZOOM = 16f;
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
+            new LatLng(-40, -168), new LatLng(71, 136));
     //widgets
-    private EditText mSearchText;
-
+    private AutoCompleteTextView mSearchText;
+    EditText popupNewMarkerNameEditText;
+    TextView popupNewMarkerLatLngTextView;
+    Dialog popupNewMarker;
     //vars
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
+    private GoogleApiClient mGoogleApiClient;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         displayDrawer();
-        mSearchText = (EditText) findViewById(R.id.input_search);
+        mSearchText = (AutoCompleteTextView) findViewById(R.id.input_search);
         getLocationPermission();
 
     }
 
+    private void addNewMarker(LatLng latLng, String newStopName){
+        // Creating a marker
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        // Setting the position and title for the marker
+        markerOptions.position(latLng);
+        markerOptions.title(newStopName);
+        //Save to Firebase
+        FirebaseUser user = mAuth.getCurrentUser();
+        String userId=user.getUid();
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
+        myRef.child(userId).child("routes").child("route1").child("stops").child(newStopName).child("lat").setValue(latLng.latitude);
+        myRef.child(userId).child("routes").child("route1").child("stops").child(newStopName).child("long").setValue(latLng.longitude);
+        myRef.child(userId).child("routes").child("route1").child("stops").child(newStopName).child("name").setValue(newStopName);
+        // Clears the previously touched position
+//        mMap.clear();
+
+        // Animating to the touched position
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Placing a marker on the touched position
+        mMap.addMarker(markerOptions);
+        popupNewMarker.dismiss();
+    }
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
@@ -109,8 +188,17 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback{
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
     }
-    private void init(){
-        Log.d(TAG, "init: initializing");
+    private void init(){ mGoogleApiClient = new GoogleApiClient
+            .Builder(this)
+            .addApi(Places.GEO_DATA_API)
+            .addApi(Places.PLACE_DETECTION_API)
+            .enableAutoManage(this, this)
+            .build();
+
+        mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient,
+                LAT_LNG_BOUNDS, null);
+
+        mSearchText.setAdapter(mPlaceAutocompleteAdapter);
 
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -127,6 +215,28 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback{
                 return false;
             }
         });
+
+
+    }
+
+    private void setNewMarkerInformation(final LatLng latLng){
+        Log.d(TAG, "init: onMapClickLister");
+        popupNewMarker = new Dialog(MapsActivity.this);
+        popupNewMarker.setContentView(R.layout.popup_new_stop);
+        popupNewMarker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupNewMarker.show();
+        popupNewMarkerNameEditText = popupNewMarker.findViewById(R.id.newStopNameEditText);
+        popupNewMarkerLatLngTextView = popupNewMarker.findViewById(R.id.latLongTextView);
+        String markerLatLng="Latitude: " + latLng.latitude + " & Longitude: " + latLng.longitude;
+        popupNewMarkerLatLngTextView.setText(markerLatLng);
+        Button popupNewMarkerButton= popupNewMarker.findViewById(R.id.savePlaceButton);
+        popupNewMarkerButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                addNewMarker(latLng,popupNewMarkerNameEditText.getText().toString());
+            }
+        });
+
     }
     private void geoLocate(){
         Log.d(TAG, "geoLocate: geolocating");
@@ -214,5 +324,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback{
         startActivity(new Intent(this, HomeActivity.class));
         finish();
         super.onBackPressed();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
