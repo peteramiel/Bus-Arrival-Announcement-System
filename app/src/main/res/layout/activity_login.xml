@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".LoginActivity"
     android:background="@drawable/loginbg"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
 
-   <ImageView
-       android:layout_gravity="center"
-       android:layout_width="100sp"
-       android:layout_height="100sp"
-       android:src="@drawable/logo"
-       android:layout_marginTop="30sp"
-       android:contentDescription="@string/image_content_description"
-       />
+    <ImageView
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30sp"
+        android:contentDescription="@string/image_content_description"
+        android:src="@drawable/logo" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/signInCardView"
@@ -47,30 +46,30 @@
                 android:id="@+id/userNameSignInWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10sp"
-                android:layout_marginBottom="10sp">
+                android:layout_marginBottom="10sp"
+                android:layout_marginTop="10sp">
 
-            <EditText
-                android:id="@+id/userNameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="@string/username" />
+                <EditText
+                    android:id="@+id/userNameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/username"
+                    android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/passwordSignInWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10sp"
-                android:layout_marginBottom="10sp">
+                android:layout_marginBottom="10sp"
+                android:layout_marginTop="10sp">
 
-            <EditText
-                android:id="@+id/passwordEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="@string/password" />
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -78,35 +77,34 @@
                 android:id="@+id/signInButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
                 android:background="@drawable/rounded_button_blue"
                 android:text="@string/sign_in"
-                android:layout_marginTop="20sp"
                 android:textColor="@color/colorWhite"
-                android:textSize="15sp"
-                />
+                android:textSize="15sp" />
+
             <LinearLayout
+                android:id="@+id/signUpLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="15sp"
                 android:layout_gravity="center"
-                android:id="@+id/signUpLayout"
-                >
+                android:layout_marginTop="15sp"
+                android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New User?"
-                    android:layout_marginRight="5sp"
                     android:layout_marginEnd="5sp"
-                    />
+                    android:layout_marginRight="5sp"
+                    android:text="New User?" />
+
                 <Button
+                    android:id="@+id/goSignUpButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sign_up"
-                    android:id="@+id/goSignUpButton"
-                    android:textColor="@color/colorPrimary"
                     android:background="@color/colorWhite"
-                    />
+                    android:text="@string/sign_up"
+                    android:textColor="@color/colorPrimary" />
 
 
             </LinearLayout>
@@ -114,8 +112,6 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
-
 
 
 </LinearLayout>

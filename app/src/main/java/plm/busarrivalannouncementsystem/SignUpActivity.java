@@ -54,10 +54,10 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         usernameWrapper.setHint("Email");
         passwordWrapper.setHint("Password");
 
-        mPasswordField=findViewById(R.id.passwordSignUpEditText);
-        mEmailField=findViewById(R.id.userNameSignUpEditText);
-        mRetypePasswordField=findViewById(R.id.retypePasswordSignUpEditText);
-        mCompanyField=findViewById(R.id.companySignUpEditText);
+        mPasswordField = findViewById(R.id.passwordSignUpEditText);
+        mEmailField = findViewById(R.id.userNameSignUpEditText);
+        mRetypePasswordField = findViewById(R.id.retypePasswordSignUpEditText);
+        mCompanyField = findViewById(R.id.companySignUpEditText);
 
         findViewById(R.id.signUpButton).setOnClickListener(this);
         signUpDialog = new Dialog(this);
@@ -106,15 +106,15 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
             passwordWrapper.setError(null);
         }
 
-        if(!password.equals(retypePassword)){
+        if (!password.equals(retypePassword)) {
             retypeWrapper.setError("Passwords do not match. Please enter your desired password again");
-            valid=false;
+            valid = false;
         }
 
         return valid;
     }
 
-    public void createAccount(String email, String password){
+    public void createAccount(String email, String password) {
         if (!validateForm()) {
             return;
         }
@@ -126,7 +126,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            userId=user.getUid();
+                            userId = user.getUid();
                             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
                             myRef.child(userId).child("company").setValue(mCompanyField.getText().toString());
                             myRef.child(userId).child("email").setValue(mEmailField.getText().toString());
@@ -145,9 +145,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
                 });
     }
 
-    public void newUserCreated(){
-            signUpDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            signUpDialog.show();
+    public void newUserCreated() {
+        signUpDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        signUpDialog.show();
     }
 
     @Override
@@ -156,9 +156,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         if (i == R.id.signUpButton) {
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
-        if (i == R.id.getStartedButton){
+        if (i == R.id.getStartedButton) {
             signUpDialog.dismiss();
-            Intent signInNewUser = new Intent(this,GetStarted.class);
+            Intent signInNewUser = new Intent(this, GetStarted.class);
             startActivity(signInNewUser);
             finish();
         }

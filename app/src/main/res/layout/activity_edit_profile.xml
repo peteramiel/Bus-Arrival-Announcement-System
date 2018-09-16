@@ -1,127 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayoutHome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawerLayoutHome"
-    tools:context=".EditProfileActivity"
     android:fitsSystemWindows="true"
-    >
+    tools:context=".EditProfileActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <include
             layout="@layout/app_bar"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            />
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+            android:layout_height="wrap_content" />
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/ivViewProfile"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@color/colorAccent" />
+            android:layout_height="match_parent">
 
-|<android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="176dp"
-        tools:ignore="UnusedAttribute"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="20dp"
-        android:focusable="true" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ivViewProfile"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <android.support.design.widget.TextInputLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_height="match_parent">
 
-                <EditText
+                <ImageView
+                    android:id="@+id/ivViewProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@color/colorAccent" />
+
+                |
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="176dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:srcCompat="@drawable/ic_add_circle_outline_white_24dp"
+                    tools:ignore="UnusedAttribute" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Company Name"
-                    android:id="@+id/editCompanyTextView"
-                    />
+                    android:layout_below="@id/ivViewProfile"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/editCompanyWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                        <EditText
+                            android:id="@+id/editCompanyTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Company Name" />
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Mission"
-                    android:id="@+id/editMissionTextView"
-                    />
+                    </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/editMissionWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                        <EditText
+                            android:id="@+id/editMissionTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Mission" />
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Vision"
-                    android:id="@+id/editVisionTextView"
-                    />
+                    </android.support.design.widget.TextInputLayout>
 
-            </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/editVisionWrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_button_green"
-        android:id="@+id/saveEditProfileButton"
-        android:text="Save"
-        android:textColor="@color/colorWhite"
-        android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center_horizontal"/>
+                        <EditText
+                            android:id="@+id/editVisionTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Vision" />
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="5dp"
+                        android:weightSum="2"
+                        android:layout_marginTop="20dp">
+
+                        <Button
+                            android:id="@+id/saveEditProfileButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:background="@drawable/rounded_button_green"
+                            android:text="Save"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="20sp" />
+
+                        <Button
+                            android:id="@+id/changepasswordEditProfileButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/rounded_button_green"
+                            android:text="Change Password"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="20sp" />
 
 
-        </LinearLayout>
-    </RelativeLayout>
-</ScrollView>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
+        android:id="@+id/navView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        app:menu="@menu/navigation_menu"
-        android:id="@+id/navView"
-        app:headerLayout="@layout/nav_header"
         android:layout_gravity="start"
-        />
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/navigation_menu" />
 </android.support.v4.widget.DrawerLayout>

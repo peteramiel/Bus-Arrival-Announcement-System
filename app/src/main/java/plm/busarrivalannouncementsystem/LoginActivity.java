@@ -88,6 +88,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
 
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.signInButton) {
+            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
+        } else if (i == R.id.goSignUpButton){
+            goSignUp();
+        }
+
+//          else if (i == R.id.verify_email_button) {
+//            sendEmailVerification();
+//        }
+    }
+
     private void signIn(String email, String password) {
         if (!validateForm()) {
             return;
@@ -172,19 +186,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
 
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.signInButton) {
-            signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        } else if (i == R.id.goSignUpButton){
-            goSignUp();
-        }
-
-//          else if (i == R.id.verify_email_button) {
-//            sendEmailVerification();
-//        }
-    }
 
 
     @Override
