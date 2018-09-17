@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ProfileActivity extends BaseActivity implements View.OnClickListener{
+public class ProfileActivity extends BaseActivity implements View.OnClickListener {
 
 
     private String userId;
@@ -30,29 +30,29 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_profile);
 
         companyTextView = findViewById(R.id.profileCompanyTextView);
-        missionTextView= findViewById(R.id.profileMissionTextView);
-        visionTextView= findViewById(R.id.profileVisionTextView);
-        mAuth= FirebaseAuth.getInstance();
+        missionTextView = findViewById(R.id.profileMissionTextView);
+        visionTextView = findViewById(R.id.profileVisionTextView);
+        mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        userId=user.getUid();
+        userId = user.getUid();
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        companyTextView.setText(ds.child(userId).child("company").getValue(String.class));
-                        missionTextView.setText(ds.child(userId).child("mission").getValue(String.class));
-                        visionTextView.setText(ds.child(userId).child("vision").getValue(String.class));
+                    companyTextView.setText(ds.child(userId).child("company").getValue(String.class));
+                    missionTextView.setText(ds.child(userId).child("mission").getValue(String.class));
+                    visionTextView.setText(ds.child(userId).child("vision").getValue(String.class));
                 }
 
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
         displayDrawer();
-
 
 
         super.onCreate(savedInstanceState);
@@ -62,8 +62,8 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.editProfileButton){
-            startActivity(new Intent (this,EditProfileActivity.class));
+        if (i == R.id.editProfileButton) {
+            startActivity(new Intent(this, EditProfileActivity.class));
         }
 
     }

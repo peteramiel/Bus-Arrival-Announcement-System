@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:orientation="vertical"
     android:background="@color/colorPrimaryDark"
     android:gravity="bottom"
-    android:paddingLeft="20sp"
-    >
+    android:orientation="vertical"
+    android:paddingLeft="20sp">
+
     <TextView
+        android:id="@+id/headerCompanyTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/headerCompanyTextView"
         android:text="Company Name"
         android:textSize="22sp"
-        android:textStyle="bold"
-        />
+        android:textStyle="bold" />
+
     <TextView
+        android:id="@+id/headerEmailTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/headerEmailTextView"
         android:text="Email@gmail.com"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
 </LinearLayout>

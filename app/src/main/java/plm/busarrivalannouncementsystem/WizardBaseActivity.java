@@ -31,7 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
-public class WizardBaseActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class WizardBaseActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener {
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
     public FirebaseAuth mAuth;
@@ -51,7 +51,7 @@ public class WizardBaseActivity extends FragmentActivity implements NavigationVi
         final String email = userPref.getString("email", "");
         View headerView = navigationView.getHeaderView(0);
         TextView navCompany = headerView.findViewById(R.id.headerCompanyTextView);
-        TextView navEmail =  headerView.findViewById(R.id.headerEmailTextView);
+        TextView navEmail = headerView.findViewById(R.id.headerEmailTextView);
         navCompany.setText(company);
         navEmail.setText(email);
     }
@@ -64,8 +64,8 @@ public class WizardBaseActivity extends FragmentActivity implements NavigationVi
         popupNoInternet.setContentView(R.layout.popup_no_internet);
 
         checkConnection();
-        Button popupNoInternetButton= popupNoInternet.findViewById(R.id.retryConnectionButton);
-        popupNoInternetButton.setOnClickListener(new View.OnClickListener(){
+        Button popupNoInternetButton = popupNoInternet.findViewById(R.id.retryConnectionButton);
+        popupNoInternetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkConnection();

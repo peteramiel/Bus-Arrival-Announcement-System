@@ -13,13 +13,14 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-public class HelpActivity extends WizardBaseActivity implements View.OnClickListener{
+public class HelpActivity extends WizardBaseActivity implements View.OnClickListener {
     private ViewPager viewPager;
     private View indicator1;
     private View indicator2;
     private View indicator3;
     private View indicator4;
     private View indicator5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_help);
@@ -58,7 +59,7 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
                     R.layout.help_page3,
                     R.layout.help_page4,
                     R.layout.help_page5
-                    );
+            );
         }
 
         @Override
@@ -67,6 +68,7 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
         }
 
     }
+
     private class WizardPageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
@@ -102,6 +104,7 @@ public class HelpActivity extends WizardBaseActivity implements View.OnClickList
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
     }
+
     public void updateIndicators(int position) {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int resizeValue = (int) TypedValue.applyDimension(

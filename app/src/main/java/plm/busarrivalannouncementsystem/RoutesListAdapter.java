@@ -23,10 +23,9 @@ public class RoutesListAdapter extends ArrayAdapter {
     private final String[] infoArray;
 
 
-
-    public RoutesListAdapter(Activity context, String[] nameArrayParam, String[] infoArrayParam){
-        super(context,R.layout.listview_routes , nameArrayParam);
-        this.context=context;
+    public RoutesListAdapter(Activity context, String[] nameArrayParam, String[] infoArrayParam) {
+        super(context, R.layout.listview_routes, nameArrayParam);
+        this.context = context;
         this.nameArray = nameArrayParam;
         this.infoArray = infoArrayParam;
     }

@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener{
+public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -106,6 +106,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
             init();
         }
     }
+
     private String TAG = "MapsActivity";
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -124,6 +125,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +136,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
 
     }
 
-    private void addNewMarker(LatLng latLng, String newStopName){
+    private void addNewMarker(LatLng latLng, String newStopName) {
         // Creating a marker
         MarkerOptions markerOptions = new MarkerOptions();
 
@@ -143,7 +145,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         markerOptions.title(newStopName);
         //Save to Firebase
         FirebaseUser user = mAuth.getCurrentUser();
-        String userId=user.getUid();
+        String userId = user.getUid();
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
         myRef.child(userId).child("routes").child("route1").child("stops").child(newStopName).child("lat").setValue(latLng.latitude);
         myRef.child(userId).child("routes").child("route1").child("stops").child(newStopName).child("long").setValue(latLng.longitude);
@@ -158,42 +160,45 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         mMap.addMarker(markerOptions);
         popupNewMarker.dismiss();
     }
-    private void getDeviceLocation(){
+
+    private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        try{
-            if(mLocationPermissionsGranted){
+        try {
+            if (mLocationPermissionsGranted) {
 
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
 
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     DEFAULT_ZOOM);
 
-                        }else{
+                        } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
-    private void init(){ mGoogleApiClient = new GoogleApiClient
-            .Builder(this)
-            .addApi(Places.GEO_DATA_API)
-            .addApi(Places.PLACE_DETECTION_API)
-            .enableAutoManage(this, this)
-            .build();
+
+    private void init() {
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
 
         mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient,
                 LAT_LNG_BOUNDS, null);
@@ -203,10 +208,10 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
 
                     //execute our method for searching
                     geoLocate();
@@ -219,7 +224,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
 
     }
 
-    private void setNewMarkerInformation(final LatLng latLng){
+    private void setNewMarkerInformation(final LatLng latLng) {
         Log.d(TAG, "init: onMapClickLister");
         popupNewMarker = new Dialog(MapsActivity.this);
         popupNewMarker.setContentView(R.layout.popup_new_stop);
@@ -227,31 +232,32 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         popupNewMarker.show();
         popupNewMarkerNameEditText = popupNewMarker.findViewById(R.id.newStopNameEditText);
         popupNewMarkerLatLngTextView = popupNewMarker.findViewById(R.id.latLongTextView);
-        String markerLatLng="Latitude: " + latLng.latitude + " & Longitude: " + latLng.longitude;
+        String markerLatLng = "Latitude: " + latLng.latitude + " & Longitude: " + latLng.longitude;
         popupNewMarkerLatLngTextView.setText(markerLatLng);
-        Button popupNewMarkerButton= popupNewMarker.findViewById(R.id.savePlaceButton);
-        popupNewMarkerButton.setOnClickListener(new View.OnClickListener(){
+        Button popupNewMarkerButton = popupNewMarker.findViewById(R.id.savePlaceButton);
+        popupNewMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addNewMarker(latLng,popupNewMarkerNameEditText.getText().toString());
+                addNewMarker(latLng, popupNewMarkerNameEditText.getText().toString());
             }
         });
 
     }
-    private void geoLocate(){
+
+    private void geoLocate() {
         Log.d(TAG, "geoLocate: geolocating");
 
         String searchString = mSearchText.getText().toString();
 
         Geocoder geocoder = new Geocoder(MapsActivity.this);
         List<Address> list = new ArrayList<>();
-        try{
+        try {
             list = geocoder.getFromLocationName(searchString, 1);
-        }catch (IOException e){
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage() );
+        } catch (IOException e) {
+            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
         }
 
-        if(list.size() > 0){
+        if (list.size() > 0) {
             Address address = list.get(0);
 
             Log.d(TAG, "geoLocate: found a location: " + address.toString());
@@ -259,36 +265,38 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
 
         }
     }
-    private void moveCamera(LatLng latLng, float zoom){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+
+    private void moveCamera(LatLng latLng, float zoom) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
     }
-    private void initMap(){
+
+    private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapsActivity.this);
     }
 
-    private void getLocationPermission(){
+    private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "getLocationPermission: FINE LOCATION GRANTED");
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "getLocationPermission: FINE AND COARSE LOCATION GRANTED");
                 mLocationPermissionsGranted = true;
                 initMap();
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
                 Log.d(TAG, "getLocationPermission: COARSE LOCATION DENIED");
             }
-        }else{
+        } else {
             ActivityCompat.requestPermissions(this,
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -301,11 +309,11 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         Log.d(TAG, "onRequestPermissionsResult: called.");
         mLocationPermissionsGranted = false;
 
-        switch(requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE:{
-                if(grantResults.length > 0){
-                    for(int i = 0; i < grantResults.length; i++){
-                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mLocationPermissionsGranted = false;
                             Log.d(TAG, "onRequestPermissionsResult: permission failed");
                             return;
@@ -319,6 +327,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
             }
         }
     }
+
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, HomeActivity.class));

@@ -15,10 +15,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
-public class FindActivity extends BaseActivity implements View.OnClickListener{
+public class FindActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "MapsActivity";
     private static final int ERROR_DIALOG_REQUEST = 9001;
-    String[] nameArray = {"Route 1","Balintawak LRT - EDSA LRT","Route 3","Route 4","Alternate Route for Route 3", "Route 5" };
+    String[] nameArray = {"Route 1", "Balintawak LRT - EDSA LRT", "Route 3", "Route 4", "Alternate Route for Route 3", "Route 5"};
 
     String[] infoArray = {
             "Sta. Cruz - Marilao",
@@ -35,8 +35,8 @@ public class FindActivity extends BaseActivity implements View.OnClickListener{
         setContentView(R.layout.activity_find);
         displayDrawer();
         super.onCreate(savedInstanceState);
-        if (isServicesOK()){
-            RoutesListAdapter routes = new RoutesListAdapter(this, nameArray,infoArray);
+        if (isServicesOK()) {
+            RoutesListAdapter routes = new RoutesListAdapter(this, nameArray, infoArray);
             listViewRoutes = findViewById(R.id.listViewRoutes);
             listViewRoutes.setAdapter(routes);
             listViewRoutes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -50,20 +50,19 @@ public class FindActivity extends BaseActivity implements View.OnClickListener{
 
         }
     }
-    public boolean isServicesOK(){
-        Log.d(TAG,"isServicesOK: checking google services version");
+
+    public boolean isServicesOK() {
+        Log.d(TAG, "isServicesOK: checking google services version");
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
-        if(available== ConnectionResult.SUCCESS){
-            Log.d(TAG,"isServicesOK: Google Play Services is Working");
+        if (available == ConnectionResult.SUCCESS) {
+            Log.d(TAG, "isServicesOK: Google Play Services is Working");
             return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            Log.d(TAG,"isServicesOK: a resolvable error has occurred");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this,available,ERROR_DIALOG_REQUEST);
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            Log.d(TAG, "isServicesOK: a resolvable error has occurred");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }
-        else{
-            Toast.makeText(this,"You can't make map requests",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
@@ -72,6 +71,7 @@ public class FindActivity extends BaseActivity implements View.OnClickListener{
     public void onClick(View view) {
 
     }
+
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, HomeActivity.class));

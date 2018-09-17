@@ -45,15 +45,14 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.saveEditProfileButton) {
-            saveChanges(mCompanyField.getText().toString(),mMissionField.getText().toString(),mVisionField.getText().toString());
-        }
-        else if(i == R.id.changepasswordEditProfileButton) {
+            saveChanges(mCompanyField.getText().toString(), mMissionField.getText().toString(), mVisionField.getText().toString());
+        } else if (i == R.id.changepasswordEditProfileButton) {
             changePassword();
         }
     }
 
-    private void saveChanges(String company, String mission, String vision){
-        if(!validateForm()){
+    private void saveChanges(String company, String mission, String vision) {
+        if (!validateForm()) {
             return;
         }
         FirebaseUser user = mAuth.getCurrentUser();
@@ -65,8 +64,8 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
         startActivity(new Intent(this, HomeActivity.class));
     }
 
-    private void changePassword(){
-        Intent i=new Intent(this,ChangePasswordActivity.class);
+    private void changePassword() {
+        Intent i = new Intent(this, ChangePasswordActivity.class);
         startActivity(i);
     }
 

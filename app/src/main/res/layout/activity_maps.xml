@@ -5,13 +5,11 @@
     android:id="@+id/drawerLayoutHome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    >
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-       >
+        android:layout_height="match_parent">
 
         <include
             layout="@layout/app_bar"
@@ -24,38 +22,39 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MapsActivity" />
+
         <RelativeLayout
+            android:id="@+id/relLayout1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:elevation="10dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/white_border"
-            android:id="@+id/relLayout1">
+            android:elevation="10dp">
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/ic_magnify"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            app:srcCompat="@drawable/ic_place_black_24dp"
-            android:layout_marginStart="10dp" />
+            <ImageView
+                android:id="@+id/ic_magnify"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                app:srcCompat="@drawable/ic_place_black_24dp" />
 
-        <AutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/ic_magnify"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:textColor="#000"
-            android:id="@+id/input_search"
-            android:background="@null"
-            android:hint="Enter Address, City or Zip Code"
-            android:imeOptions="actionSearch"
-            android:layout_toEndOf="@+id/ic_magnify" />
-    </RelativeLayout>
+            <AutoCompleteTextView
+                android:id="@+id/input_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/ic_magnify"
+                android:layout_toRightOf="@+id/ic_magnify"
+                android:background="@null"
+                android:hint="Enter Address, City or Zip Code"
+                android:imeOptions="actionSearch"
+                android:textColor="#000"
+                android:textSize="15sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView

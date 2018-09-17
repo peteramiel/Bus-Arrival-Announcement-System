@@ -15,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-public class GetStarted extends FragmentActivity{
+public class GetStarted extends FragmentActivity {
     private ViewPager viewPager;
     private View indicator1;
     private View indicator2;
@@ -23,6 +23,7 @@ public class GetStarted extends FragmentActivity{
     private View indicator4;
     private View indicator5;
     private int WIZARD_PAGES_COUNT = 6;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +33,7 @@ public class GetStarted extends FragmentActivity{
         indicator3 = (View) findViewById(R.id.indicator3);
         indicator4 = (View) findViewById(R.id.indicator4);
         indicator5 = (View) findViewById(R.id.indicator5);
-        viewPager =  findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(new GetStarted.ViewPagerAdapter(getSupportFragmentManager()));
         viewPager.addOnPageChangeListener(new GetStarted.WizardPageChangeListener());
         updateIndicators(0);
@@ -41,9 +42,7 @@ public class GetStarted extends FragmentActivity{
     }
 
 
-
     private class ViewPagerAdapter extends FragmentPagerAdapter {
-
 
 
         public ViewPagerAdapter(FragmentManager fm) {
@@ -89,7 +88,7 @@ public class GetStarted extends FragmentActivity{
         @Override
         public void onPageSelected(int position) {
             updateIndicators(position);
-            if (position== WIZARD_PAGES_COUNT-1){
+            if (position == WIZARD_PAGES_COUNT - 1) {
                 startActivity(new Intent(GetStarted.this, HomeActivity.class));
                 finish();
             }
