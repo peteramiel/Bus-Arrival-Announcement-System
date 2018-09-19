@@ -7,22 +7,38 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <RelativeLayout
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content" />
 
-        <include
-            layout="@layout/app_bar"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".CreateNewRoute" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".MapsActivity" />
-
+            android:layout_height="wrap_content"
+            android:text="Set Starting Point"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_above="@+id/relLayout1"
+            />
         <RelativeLayout
             android:id="@+id/relLayout1"
             android:layout_width="match_parent"
@@ -52,11 +68,41 @@
                 android:background="@null"
                 android:hint="@string/search_map_hint"
                 android:imeOptions="actionSearch"
-                android:textColor="#000"
                 android:inputType="text"
+                android:textColor="#000"
                 android:textSize="15sp" />
         </RelativeLayout>
     </RelativeLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/setStartingPointButton"
+        android:background="@drawable/rounded_button_green"
+        android:text="Set Starting Point"
+        android:textColor="@color/colorWhite"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10sp"
+        android:paddingRight="10sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/setEndingPointButton"
+        android:background="@drawable/rounded_button_green"
+        android:text="Set End Point"
+        android:textColor="@color/colorWhite"
+        />
+</RelativeLayout>
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navView"

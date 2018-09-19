@@ -43,12 +43,14 @@ public class FindActivity extends BaseActivity implements View.OnClickListener{
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position,
                                         long id) {
+                    Log.d(TAG,"MapsActivity: Starting MapsActivity");
                     Intent intent = new Intent(FindActivity.this, MapsActivity.class);
                     startActivity(intent);
                 }
             });
 
         }
+        findViewById(R.id.newRouteButton).setOnClickListener(this);
     }
     public boolean isServicesOK(){
         Log.d(TAG,"isServicesOK: checking google services version");
@@ -70,7 +72,11 @@ public class FindActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-
+        int i =view.getId();
+        if (i ==R.id.newRouteButton){
+            startActivity(new Intent(FindActivity.this,CreateNewRoute.class));
+            finish();
+        }
     }
     @Override
     public void onBackPressed() {

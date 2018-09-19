@@ -35,5 +35,6 @@
 
     <string name="title_activity_get_started">GetStartedActivity</string>
     <string name="connect_to_bluetooth_display">Connect to Bluetooth Display</string>
+    <string name="search_map_hint">Enter Address, City or Zip Code</string>
 
 </resources>
