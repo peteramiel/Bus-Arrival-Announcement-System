@@ -2,7 +2,6 @@ package plm.busarrivalannouncementsystem;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,9 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,21 +38,15 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
-public class CreateNewRoute extends WizardBaseActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -145,7 +136,7 @@ public class CreateNewRoute extends WizardBaseActivity implements OnMapReadyCall
 
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(CreateNewRoute.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateTerminals.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -180,7 +171,7 @@ public class CreateNewRoute extends WizardBaseActivity implements OnMapReadyCall
         markerOptions.position(latLng);
         markerOptions.title(newStopName);
         markerOptions.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         mEndMarkerName=newStopName;
         mEndMarkerLatLong=latLng;
         Log.d(TAG, "addNewMarker: adding stop "+ latLng.toString());
@@ -242,7 +233,7 @@ public class CreateNewRoute extends WizardBaseActivity implements OnMapReadyCall
 
     private void setNewMarkerInformation(final LatLng latLng) {
 
-        popupNewMarker = new Dialog(CreateNewRoute.this);
+        popupNewMarker = new Dialog(CreateTerminals.this);
         popupNewMarker.setContentView(R.layout.popup_new_stop);
         popupNewMarker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupNewMarker.show();
@@ -276,7 +267,7 @@ public class CreateNewRoute extends WizardBaseActivity implements OnMapReadyCall
 
         String searchString = mSearchText.getText().toString();
 
-        Geocoder geocoder = new Geocoder(CreateNewRoute.this);
+        Geocoder geocoder = new Geocoder(CreateTerminals.this);
         List<Address> list = new ArrayList<>();
         try {
             list = geocoder.getFromLocationName(searchString, 1);
@@ -301,7 +292,7 @@ public class CreateNewRoute extends WizardBaseActivity implements OnMapReadyCall
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(CreateNewRoute.this);
+        mapFragment.getMapAsync(CreateTerminals.this);
     }
 
     private void getLocationPermission() {
@@ -376,7 +367,7 @@ public class CreateNewRoute extends WizardBaseActivity implements OnMapReadyCall
         }else if(i==R.id.setEndingPointButton){
             saveNewStartMarkerToFireBase(mStartMarkerLatLong, mStartMarkerName);
             saveNewEndMarkerToFireBase(mEndMarkerLatLong, mEndMarkerName);
-            startActivity(new Intent(CreateNewRoute.this,MapsActivity.class));
+            startActivity(new Intent(CreateTerminals.this,MapsActivity.class));
             finish();
         }
     }

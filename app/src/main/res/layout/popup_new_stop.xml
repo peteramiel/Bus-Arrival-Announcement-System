@@ -81,7 +81,7 @@
                 android:layout_marginLeft="30sp"
                 android:layout_marginRight="30sp"
                 android:background="@drawable/rounded_button_green"
-                android:text="Save Place"
+                android:text="Save Stop"
                 android:textColor="@color/colorWhite"
 
                 />

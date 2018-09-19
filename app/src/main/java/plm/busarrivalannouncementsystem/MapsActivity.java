@@ -35,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -116,6 +117,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         markerNameArrayList= new ArrayList<>();
         markerLatLongArrayList=new ArrayList<>();
         getNewMarkersFromFirebase();
+        getTerminalsFromFirebase();
     }
 
     private void getNearMarker(LatLng latLng){
@@ -174,6 +176,26 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         markerOptions.position(latLng);
         markerOptions.title(newStopName);
 
+        // Clears the previously touched position
+//        mMap.clear();
+
+        Log.d(TAG, "addNewMarker: adding stop "+ latLng.toString());
+
+        // Placing a marker on the touched position
+        mMap.addMarker(markerOptions);
+        Log.d(TAG, "addNewMarker: added stop "+ latLng.toString());
+
+    }
+    private void addNewTerminalMarker(LatLng latLng, String newStopName) {
+
+        // Creating a marker
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        // Setting the position and title for the marker
+        markerOptions.position(latLng);
+        markerOptions.title(newStopName);
+        markerOptions.icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         // Clears the previously touched position
 //        mMap.clear();
 
@@ -249,16 +271,42 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
                         addNewMarker(latLng, newStopName);
                         Log.d(TAG, "getNewMarkersFromDatabase: passing information latlng: "+latLng.toString() +" name:" + newStopName);
                     }
-
-
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
+    }
+    private void getTerminalsFromFirebase(){
+        Log.d(TAG, "getTerminalsFromFirebase: staring void");
 
+        mAuth= FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        final String userId=user.getUid();
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+userId+"/routes/route1/terminals");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                markerLatLongArrayList.clear();
+                markerNameArrayList.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if(ds.child("lat").getValue(Double.class)!=null && ds.child("long").getValue(Double.class)!=null){
+                        LatLng latLng = new LatLng(ds.child("lat").getValue(Double.class),
+                                ds.child("long").getValue(Double.class));
+                        String newStopName = ds.child("name").getValue(String.class);
+                        markerNameArrayList.add(newStopName);
+                        markerLatLongArrayList.add(latLng);
+                        Log.d(TAG, "getTerminalsFromFirebase: adding marker to the ArrayList: "+latLng.toString() +" name:" + newStopName);
+                        addNewTerminalMarker(latLng, newStopName);
+                        Log.d(TAG, "getTerminalsFromFirebase: passing information latlng: "+latLng.toString() +" name:" + newStopName);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
     private void setNewMarkerInformation(final LatLng latLng) {
 

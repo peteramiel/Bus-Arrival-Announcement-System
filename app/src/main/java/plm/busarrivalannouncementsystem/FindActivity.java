@@ -2,14 +2,11 @@ package plm.busarrivalannouncementsystem;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -73,7 +70,7 @@ public class FindActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View view) {
         int i =view.getId();
         if (i ==R.id.newRouteButton){
-            startActivity(new Intent(FindActivity.this,CreateNewRoute.class));
+            startActivity(new Intent(FindActivity.this,CreateTerminals.class));
             finish();
         }
     }

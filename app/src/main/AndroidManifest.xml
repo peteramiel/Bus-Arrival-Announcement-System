@@ -83,7 +83,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".NewRoute"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".CreateNewRoute"
+        <activity android:name=".CreateTerminals"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".ChangePasswordActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
