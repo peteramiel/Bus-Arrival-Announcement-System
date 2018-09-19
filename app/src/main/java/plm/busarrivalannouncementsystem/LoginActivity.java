@@ -72,17 +72,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         checkConnection();
-            Log.d(TAG, "onStartUser:" + currentUser);
-            if(currentUser== null){
+        Log.d(TAG, "onStartUser:" + currentUser);
+        if (currentUser == null) {
 
-            }
-            else{
+        } else {
 
-                Intent gotoHome = new Intent(LoginActivity.this,HomeActivity.class);
-                startActivity(gotoHome);
-                finish();
-            }
-
+            Intent gotoHome = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(gotoHome);
+            finish();
+        }
 
 
     }
@@ -93,7 +91,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         int i = v.getId();
         if (i == R.id.signInButton) {
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-        } else if (i == R.id.goSignUpButton){
+        } else if (i == R.id.goSignUpButton) {
             goSignUp();
         }
 
@@ -117,11 +115,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             // Sign in success, update UI with the signed-in user's information
                             DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            final String userId=user.getUid();
+                            final String userId = user.getUid();
                             myRef.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for(DataSnapshot ds:dataSnapshot.getChildren()){
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                         SharedPreferences userPref = getSharedPreferences("User", 0);
                                         SharedPreferences.Editor editor = userPref.edit();
                                         editor.putString("company", ds.child(userId).child("company").getValue(String.class));
@@ -184,8 +182,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         return valid;
     }
-
-
 
 
     @Override

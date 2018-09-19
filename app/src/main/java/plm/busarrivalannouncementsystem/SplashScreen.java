@@ -17,28 +17,31 @@ public class SplashScreen extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 4000;
     ImageView logo;
     ImageView logo2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        logo=findViewById(R.id.wholeBusSplash);
-        logo2=findViewById(R.id.logoSplash);
-        Animation bounce = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.bounce);
+        logo = findViewById(R.id.wholeBusSplash);
+        logo2 = findViewById(R.id.logoSplash);
+        Animation bounce = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
         logo.startAnimation(bounce);
 
         logo2.setVisibility(logo2.INVISIBLE);
 
         final Animation startFadeOutAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
-        final Animation startFadeInAnimation =AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in);
+        final Animation startFadeInAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
 
-        startFadeOutAnimation.setAnimationListener(new Animation.AnimationListener(){
+        startFadeOutAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
             }
+
             @Override
             public void onAnimationEnd(Animation animation) {
                 logo.setVisibility(logo.INVISIBLE);
             }
+
             @Override
             public void onAnimationRepeat(Animation animation) {
             }
@@ -49,9 +52,7 @@ public class SplashScreen extends AppCompatActivity {
                 logo.startAnimation(startFadeOutAnimation);
                 logo2.startAnimation(startFadeInAnimation);
             }
-        },3000);
-
-
+        }, 3000);
 
 
 //        Animation fadeOut = new AlphaAnimation(1, 0);
@@ -70,6 +71,6 @@ public class SplashScreen extends AppCompatActivity {
                 startActivity(homeIntent);
                 finish();
             }
-        },SPLASH_TIME_OUT);
+        }, SPLASH_TIME_OUT);
     }
 }

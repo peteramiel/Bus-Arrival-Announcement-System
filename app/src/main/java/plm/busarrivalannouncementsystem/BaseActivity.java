@@ -67,30 +67,31 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         final String email = userPref.getString("email", "");
         View headerView = navigationView.getHeaderView(0);
         TextView navCompany = headerView.findViewById(R.id.headerCompanyTextView);
-        TextView navEmail =  headerView.findViewById(R.id.headerEmailTextView);
+        TextView navEmail = headerView.findViewById(R.id.headerEmailTextView);
         navCompany.setText(company);
         navEmail.setText(email);
     }
 
-    public boolean isServicesOK(){
+    public boolean isServicesOK() {
         String TAG = "Base Activity";
         final int ERROR_DIALOG_REQUEST = 9001;
-        Log.d(TAG,"isServicesOK: Checking Google Services if OK");
+        Log.d(TAG, "isServicesOK: Checking Google Services if OK");
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
-        if(available== ConnectionResult.SUCCESS){
-            Log.d(TAG,"isServicesOK: Google play services is available");
+        if (available == ConnectionResult.SUCCESS) {
+            Log.d(TAG, "isServicesOK: Google play services is available");
             return true;
-        }else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-            Log.d(TAG,"isServicesOK: Solvable Error has been found");
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            Log.d(TAG, "isServicesOK: Solvable Error has been found");
             Dialog dialog = GoogleApiAvailability.getInstance().
                     getErrorDialog(this,
-                            available,ERROR_DIALOG_REQUEST);
+                            available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }else{
-            Toast.makeText(this,"Can't make map request",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Can't make map request", Toast.LENGTH_LONG).show();
         }
         return false;
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,8 +100,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         popupNoInternet.setContentView(R.layout.popup_no_internet);
 
         checkConnection();
-        Button popupNoInternetButton= popupNoInternet.findViewById(R.id.retryConnectionButton);
-        popupNoInternetButton.setOnClickListener(new View.OnClickListener(){
+        Button popupNoInternetButton = popupNoInternet.findViewById(R.id.retryConnectionButton);
+        popupNoInternetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkConnection();
@@ -179,7 +180,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             viewFind();
         } else if (i == R.id.nav_help) {
             viewHelp();
-        }else if (i == R.id.nav_bluetooth) {
+        } else if (i == R.id.nav_bluetooth) {
             viewBluetoothConnect();
         } else if (i == R.id.nav_logout) {
             logout(this);
@@ -190,7 +191,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void viewBluetoothConnect() {
-        startActivity(new Intent(this,ConnectBluetoothModule.class));
+        startActivity(new Intent(this, ConnectBluetoothModule.class));
         finish();
     }
 
@@ -206,7 +207,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                         editor.clear();
                         editor.apply();
                         mAuth.signOut();
-                        act.startActivity(new Intent(act,LoginActivity.class));
+                        act.startActivity(new Intent(act, LoginActivity.class));
                         finish();
                     }
                 }).create().show();

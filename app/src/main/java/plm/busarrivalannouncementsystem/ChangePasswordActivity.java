@@ -18,7 +18,7 @@ public class ChangePasswordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         displayDrawer();
-        button=findViewById(R.id.btChangePasswordSave);
+        button = findViewById(R.id.btChangePasswordSave);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

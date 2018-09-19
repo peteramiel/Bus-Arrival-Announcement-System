@@ -3,16 +3,14 @@
     <translate
         android:duration="150"
         android:fromYDelta="-3%"
+        android:interpolator="@android:anim/decelerate_interpolator"
         android:repeatCount="20"
         android:repeatMode="reverse"
-        android:interpolator="@android:anim/decelerate_interpolator"
-        android:toYDelta="2%"
-        />
+        android:toYDelta="2%" />
     <translate
         android:duration="3000"
         android:fromXDelta="-50%"
-        android:toXDelta="0%"
-        android:tension=".1"
         android:interpolator="@android:anim/decelerate_interpolator"
-        />
+        android:tension=".1"
+        android:toXDelta="0%" />
 </set>

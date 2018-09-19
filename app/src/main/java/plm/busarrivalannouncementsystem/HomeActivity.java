@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener{
+public class HomeActivity extends BaseActivity implements View.OnClickListener {
     final String TAG = "HomeActivity";
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
     FirebaseAuth mAuth;
@@ -34,19 +34,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_home);
-        mAuth= FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        userId=user.getUid();
+        userId = user.getUid();
 
         displayDrawer();
 
-        if(isServicesOK()){
+        if (isServicesOK()) {
 
         }
         super.onCreate(savedInstanceState);
     }
-
-
 
 
     @Override
@@ -55,7 +53,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         TextView welcomeTextView = findViewById(R.id.tv_welcome_message);
         welcomeTextView.setText(R.string.new_user_welcome_message);
     }
-
 
 
     @Override
@@ -74,8 +71,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 //        }
 
     }
-
-
 
 
 }

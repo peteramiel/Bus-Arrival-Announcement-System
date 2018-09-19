@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-<alpha
-    android:fromAlpha="0"
-    android:duration="2000"
-    android:toAlpha="1"
-    android:interpolator="@android:anim/accelerate_interpolator"
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <alpha
+        android:duration="2000"
+        android:fromAlpha="0"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toAlpha="1"
 
 
-    />
+        />
 </set>
 
-    <!--Animation fadeIn = new AlphaAnimation(0, 1);-->
-    <!--fadeIn.setInterpolator(new AnticipateInterpolator()); //add this-->
-    <!--fadeIn.setStartOffset(3000);-->
-    <!--fadeIn.setDuration(2000);-->
-    <!--AnimationSet animation2 = new AnimationSet(false); //change to false-->
-    <!--animation2.addAnimation(fadeIn);-->
-    <!--logo2.setAnimation(animation2);-->
+    <!--Animation fadeIn = new AlphaAnimation(0, 1);--><!--fadeIn.setInterpolator(new AnticipateInterpolator()); //add this--><!--fadeIn.setStartOffset(3000);--><!--fadeIn.setDuration(2000);--><!--AnimationSet animation2 = new AnimationSet(false); //change to false--><!--animation2.addAnimation(fadeIn);--><!--logo2.setAnimation(animation2);-->
