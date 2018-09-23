@@ -57,6 +57,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         // Buttons
         findViewById(R.id.signInButton).setOnClickListener(this);
         findViewById(R.id.goSignUpButton).setOnClickListener(this);
+        findViewById(R.id.forgotPasswordButton).setOnClickListener(this);
 //        findViewById(R.id.retryConnectionButton).setOnClickListener(this);
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
@@ -93,11 +94,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
         } else if (i == R.id.goSignUpButton) {
             goSignUp();
+        } else if (i == R.id.forgotPasswordButton) {
+            forgotPassword();
         }
 
 //          else if (i == R.id.verify_email_button) {
 //            sendEmailVerification();
 //        }
+    }
+
+    private void forgotPassword() {
+        startActivity(new Intent(this, ForgotPasswordActivity.class));
     }
 
     private void signIn(String email, String password) {
