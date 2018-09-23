@@ -69,10 +69,12 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         if (!newpass.equals(verifypass)) {
             verifypassWrapper.setError("Passwords do not match. Please enter your desired password again.");
             valid = false;
-        } else {
+        } else if (newpass.length() < 7){
+            valid = false;
+            Toast.makeText(this, "Your password must at least have 7 characters", Toast.LENGTH_SHORT).show();
+        } else{
             verifypassWrapper.setError(null);
         }
-
 
         return valid;
 
