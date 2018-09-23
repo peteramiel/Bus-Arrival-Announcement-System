@@ -103,6 +103,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
+    private String routeName;
     List<String> markerNameArrayList;
     List<LatLng> markerLatLongArrayList;
 
@@ -114,10 +115,15 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         displayDrawer();
         mSearchText = (AutoCompleteTextView) findViewById(R.id.input_search);
         getLocationPermission();
+        Intent intent = getIntent();
+        routeName = intent.getStringExtra("routeName");
+        Toast.makeText(getApplicationContext(),routeName,Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "routeName: "+routeName);
         markerNameArrayList= new ArrayList<>();
         markerLatLongArrayList=new ArrayList<>();
         getNewMarkersFromFirebase();
         getTerminalsFromFirebase();
+
     }
 
     private void getNearMarker(LatLng latLng){
@@ -129,7 +135,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
             Log.d(TAG, "getNearMarker: markerCurrent"+latLng.latitude+","+latLng.longitude);
             Location.distanceBetween(marker.latitude, marker.longitude, latLng.latitude, latLng.longitude, distance);
             // distance[0] is now the distance between these lat/lons in meters
-            Log.d(TAG, "getNearMarker: distance"+distance.toString());
+            Log.d(TAG, "getNearMarker: distance = "+distance[0]);
             if (distance[0] < 10.0) {
                 Toast.makeText(getApplicationContext(),"you have arrived",Toast.LENGTH_SHORT).show();
             }
@@ -168,6 +174,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
+
     private void addNewMarker(LatLng latLng, String newStopName) {
         // Creating a marker
         MarkerOptions markerOptions = new MarkerOptions();
@@ -212,9 +219,9 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
-        myRef.child(userId).child("routes").child("route1").child("stops").child(newStopName).child("lat").setValue(latLng.latitude);
-        myRef.child(userId).child("routes").child("route1").child("stops").child(newStopName).child("long").setValue(latLng.longitude);
-        myRef.child(userId).child("routes").child("route1").child("stops").child(newStopName).child("name").setValue(newStopName);
+        myRef.child(userId).child("routes").child(routeName).child("stops").child(newStopName).child("lat").setValue(latLng.latitude);
+        myRef.child(userId).child("routes").child(routeName).child("stops").child(newStopName).child("long").setValue(latLng.longitude);
+        myRef.child(userId).child("routes").child(routeName).child("stops").child(newStopName).child("name").setValue(newStopName);
     }
 
 
@@ -249,12 +256,13 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
     }
 
     private void getNewMarkersFromFirebase(){
-        Log.d(TAG, "getNewMarkersFromDatabase: staring void");
+        Log.d(TAG, "getNewMarkersFromDatabase: starting void");
 
         mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         final String userId=user.getUid();
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+userId+"/routes/route1/stops");
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+userId+"/routes/"+routeName+"/stops");
+        Log.d(TAG, "getNewMarkersFromDatabase: myRef "+myRef.toString());
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -284,7 +292,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         final String userId=user.getUid();
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+userId+"/routes/route1/terminals");
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+userId+"/routes/"+routeName+"/terminals");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

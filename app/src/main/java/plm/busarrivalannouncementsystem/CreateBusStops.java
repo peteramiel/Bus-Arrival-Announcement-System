@@ -8,11 +8,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -46,8 +46,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
-
+public class CreateBusStops extends WizardBaseActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener,View.OnClickListener {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
@@ -76,14 +75,14 @@ public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCal
         });
     }
 
-    private String TAG = "CreateTerminals";
+    private String TAG = "CreateBusStops";
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 16f;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(4.409981, 129.084164), new LatLng(20.227815, 114.686922));
-    //widgets20.227815, 114.686922
+    //widgets
     private AutoCompleteTextView mSearchText;
     EditText popupNewMarkerNameEditText;
     TextView popupNewMarkerLatLngTextView;
@@ -94,79 +93,46 @@ public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCal
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
-    private String mStartMarkerName;
-    private LatLng mStartMarkerLatLong;
-    private String mEndMarkerName;
-    private LatLng mEndMarkerLatLong;
     private String routeName;
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_terminals);
+        setContentView(R.layout.activity_create_bus_stops);
+        setContentView(R.layout.activity_maps);
         displayDrawer();
-        Intent intent = getIntent();
-        routeName=intent.getStringExtra("routeName");
-        Log.d(TAG,routeName);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            routeName = extras.getString("routeName");
+            // and get whatever type user account id is
+        }
+
         mSearchText = (AutoCompleteTextView) findViewById(R.id.input_search);
         getLocationPermission();
-        findViewById(R.id.setStartingPointButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.setStartingPointButton).setOnClickListener(this);
-        findViewById(R.id.setEndingPointButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.setEndingPointButton).setOnClickListener(this);
+//        getNewMarkersFromFirebase();
+//        getTerminalsFromFirebase();
     }
 
-
-    private void getDeviceLocation() {
-        Log.d(TAG, "getDeviceLocation: getting the devices current location");
-
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        try {
-            if (mLocationPermissionsGranted) {
-
-                final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
-                            LatLng mLocation=new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-
-
-                        } else {
-                            Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(CreateTerminals.this, "unable to get current location", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        } catch (SecurityException e) {
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
-        }
-    }
-
-    private void addNewStartMarker(LatLng latLng, String newStopName) {
-        mMap.clear();
+    private void addNewMarker(LatLng latLng, String newStopName) {
         // Creating a marker
         MarkerOptions markerOptions = new MarkerOptions();
+
         // Setting the position and title for the marker
         markerOptions.position(latLng);
         markerOptions.title(newStopName);
-        markerOptions.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-        mStartMarkerName=newStopName;
-        mStartMarkerLatLong=latLng;
+
+        // Clears the previously touched position
+//        mMap.clear();
+
         Log.d(TAG, "addNewMarker: adding stop "+ latLng.toString());
+
         // Placing a marker on the touched position
         mMap.addMarker(markerOptions);
         Log.d(TAG, "addNewMarker: added stop "+ latLng.toString());
+
     }
-    private void addNewEndMarker(LatLng latLng, String newStopName) {
+    private void addNewTerminalMarker(LatLng latLng, String newStopName) {
 
         // Creating a marker
         MarkerOptions markerOptions = new MarkerOptions();
@@ -176,38 +142,25 @@ public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCal
         markerOptions.title(newStopName);
         markerOptions.icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-        mEndMarkerName=newStopName;
-        mEndMarkerLatLong=latLng;
+        // Clears the previously touched position
+//        mMap.clear();
+
         Log.d(TAG, "addNewMarker: adding stop "+ latLng.toString());
+
         // Placing a marker on the touched position
         mMap.addMarker(markerOptions);
         Log.d(TAG, "addNewMarker: added stop "+ latLng.toString());
 
     }
 
-    private void saveNewStartMarkerToFireBase(LatLng latLng, String newStopName){
+    private void saveNewMarkerToFireBase(LatLng latLng, String newStopName){
         //Save to Firebase
-        Log.d(TAG,"setNewStartMarker");
         FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
-
-        myRef.child(userId).child("routes").child(routeName).child("terminals").child("terminal1").child("lat").setValue(latLng.latitude);
-        myRef.child(userId).child("routes").child(routeName).child("terminals").child("terminal1").child("long").setValue(latLng.longitude);
-        myRef.child(userId).child("routes").child(routeName).child("terminals").child("terminal1").child("name").setValue(newStopName);
-
-        Log.d(TAG,"saving");
-    }
-    private void saveNewEndMarkerToFireBase(LatLng latLng, String newStopName){
-        //Save to Firebase
-
-        Log.d(TAG,"setNewEndMarker");
-        FirebaseUser user = mAuth.getCurrentUser();
-        String userId = user.getUid();
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users");
-        myRef.child(userId).child("routes").child(routeName).child("terminals").child("terminal2").child("lat").setValue(latLng.latitude);
-        myRef.child(userId).child("routes").child(routeName).child("terminals").child("terminal2").child("long").setValue(latLng.longitude);
-        myRef.child(userId).child("routes").child(routeName).child("terminals").child("terminal2").child("name").setValue(newStopName);
+        myRef.child(userId).child("routes").child(routeName).child("stops").child(newStopName).child("lat").setValue(latLng.latitude);
+        myRef.child(userId).child("routes").child(routeName).child("stops").child(newStopName).child("long").setValue(latLng.longitude);
+        myRef.child(userId).child("routes").child(routeName).child("stops").child(newStopName).child("name").setValue(newStopName);
     }
 
 
@@ -241,9 +194,46 @@ public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCal
         });
     }
 
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    private void getDeviceLocation() {
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        try {
+            if (mLocationPermissionsGranted) {
+
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: found location!");
+                            Location currentLocation = (Location) task.getResult();
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                    DEFAULT_ZOOM);
+                            LatLng mLocation=new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+
+                        } else {
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(CreateBusStops.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
+        }
+    }
     private void setNewMarkerInformation(final LatLng latLng) {
 
-        popupNewMarker = new Dialog(CreateTerminals.this);
+        popupNewMarker = new Dialog(CreateBusStops.this);
         popupNewMarker.setContentView(R.layout.popup_new_stop);
         popupNewMarker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupNewMarker.show();
@@ -251,22 +241,15 @@ public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCal
         popupNewMarkerLatLngTextView = popupNewMarker.findViewById(R.id.latLongTextView);
         String markerLatLng = "Latitude: " + latLng.latitude + " & Longitude: " + latLng.longitude;
         popupNewMarkerLatLngTextView.setText(markerLatLng);
-        final Button popupNewMarkerButton = popupNewMarker.findViewById(R.id.savePlaceButton);
+        Button popupNewMarkerButton = popupNewMarker.findViewById(R.id.savePlaceButton);
         popupNewMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(findViewById(R.id.setStartingPointButton).getVisibility()==View.GONE){
-                    addNewEndMarker(latLng,popupNewMarkerNameEditText.getText().toString());
-                    findViewById(R.id.setEndingPointButton).setVisibility(View.VISIBLE);
-                }else{
-                addNewStartMarker(latLng, popupNewMarkerNameEditText.getText().toString());
-                findViewById(R.id.setStartingPointButton).setVisibility(View.VISIBLE);
-                }
+                addNewMarker(latLng, popupNewMarkerNameEditText.getText().toString());
+                saveNewMarkerToFireBase(latLng, popupNewMarkerNameEditText.getText().toString());
                 // Animating to the touched position
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                 popupNewMarker.dismiss();
-
-
             }
         });
 
@@ -277,7 +260,7 @@ public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCal
 
         String searchString = mSearchText.getText().toString();
 
-        Geocoder geocoder = new Geocoder(CreateTerminals.this);
+        Geocoder geocoder = new Geocoder(CreateBusStops.this);
         List<Address> list = new ArrayList<>();
         try {
             list = geocoder.getFromLocationName(searchString, 1);
@@ -302,7 +285,7 @@ public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCal
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(CreateTerminals.this);
+        mapFragment.getMapAsync(CreateBusStops.this);
     }
 
     private void getLocationPermission() {
@@ -369,19 +352,4 @@ public class CreateTerminals extends WizardBaseActivity implements OnMapReadyCal
     }
 
 
-    @Override
-    public void onClick(View view) {
-        int i = view.getId();
-        if(i==R.id.setStartingPointButton){
-            findViewById(R.id.setStartingPointButton).setVisibility(View.GONE);
-        }else if(i==R.id.setEndingPointButton){
-            saveNewStartMarkerToFireBase(mStartMarkerLatLong, mStartMarkerName);
-            saveNewEndMarkerToFireBase(mEndMarkerLatLong, mEndMarkerName);
-            Log.d(TAG,"Starting Activity: MapsActivity");
-            Intent setStops= new Intent(CreateTerminals.this,MapsActivity.class);
-            setStops.putExtra("routeName",routeName);
-            startActivity(setStops);
-            finish();
-        }
-    }
 }
