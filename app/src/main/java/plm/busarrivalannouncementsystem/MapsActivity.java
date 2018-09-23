@@ -1,6 +1,9 @@
 package plm.busarrivalannouncementsystem;
 
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,6 +12,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,10 +58,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener {
 
@@ -75,6 +86,14 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             init();
             getDeviceLocation();
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location location) {
+
+                    getDeviceLocation();
+
+                }
+            });
         }
 //         Setting a click event handler for the map
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -106,7 +125,16 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
     private String routeName;
     List<String> markerNameArrayList;
     List<LatLng> markerLatLongArrayList;
+    LocationManager locationManager;
 
+    //bluetooth
+    private final String DEVICE_ADDRESS = "00:18:E4:34:E4:0F"; //MAC Address of Bluetooth Module
+    private final UUID PORT_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+    private BluetoothDevice device;
+    private BluetoothSocket socket;
+    private OutputStream outputStream;
+    private BluetoothAdapter mBluetoothAdapter;
+    private String message;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,15 +145,63 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         getLocationPermission();
         Intent intent = getIntent();
         routeName = intent.getStringExtra("routeName");
-        Toast.makeText(getApplicationContext(),routeName,Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "routeName: "+routeName);
-        markerNameArrayList= new ArrayList<>();
-        markerLatLongArrayList=new ArrayList<>();
+
+        Toast.makeText(getApplicationContext(), routeName, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "routeName: " + routeName);
+        markerNameArrayList = new ArrayList<>();
+        markerLatLongArrayList = new ArrayList<>();
         getNewMarkersFromFirebase();
         getTerminalsFromFirebase();
+        locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            getLocationPermission();
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                2000,
+                10, locationListenerGPS);
 
+        //BLUETOOTH
+        if (bluetoothEnabled()) {
+            Log.d(TAG, "bluetoothEnabled: true");
+
+            if (bTconnect()) {
+                Log.d(TAG, "bTconnect: true;");
+
+            }
+        }
     }
+    LocationListener locationListenerGPS=new LocationListener() {
+        @Override
+        public void onLocationChanged(android.location.Location location) {
+            double latitude=location.getLatitude();
+            double longitude=location.getLongitude();
+            getNearMarker(new LatLng(location.getLatitude(),location.getLongitude()));
+            String msg="New Latitude: "+latitude + "New Longitude: "+longitude;
+            Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+        }
 
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
     private void getNearMarker(LatLng latLng){
         Log.d(TAG, "getNearMarker: "+latLng.latitude+","+latLng.longitude);
         //compare the current location to the markers in the arraylist
@@ -137,7 +213,17 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
             // distance[0] is now the distance between these lat/lons in meters
             Log.d(TAG, "getNearMarker: distance = "+distance[0]);
             if (distance[0] < 10.0) {
-                Toast.makeText(getApplicationContext(),"you have arrived",Toast.LENGTH_SHORT).show();
+                int index = markerLatLongArrayList.indexOf(marker);
+               sendMessage(markerNameArrayList.get(index));
+                Log.d(TAG, "getNearMarker: sending message");
+                try {
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                    r.play();
+                    Log.d(TAG, "playnotif " );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -436,6 +522,87 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
 
     }
 
+    //BLUUETOOTH
+    public boolean bluetoothEnabled() {
+        boolean found = false;
+        Log.d(TAG, "bluetoothEnabled: starting");
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            // Device doesn't support Bluetooth
+            Log.d(TAG, "bluetoothAdapter: null");
+            Toast.makeText(getApplicationContext(), "Device doesn't support bluetooth", Toast.LENGTH_SHORT).show();
+            found = false;
+        }
 
+        if (!mBluetoothAdapter.isEnabled()) {
+            Log.d(TAG, "bluetoothAdapter: disabled");
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
+
+        if (bondedDevices.isEmpty()) //Checks for paired bluetooth devices
+        {
+            Log.d(TAG, "bondedDevices: empty");
+            Toast.makeText(getApplicationContext(), "Please pair the device first", Toast.LENGTH_SHORT).show();
+        }else {
+            for (BluetoothDevice iterator : bondedDevices) {
+                if (iterator.getAddress().equals(DEVICE_ADDRESS)) {
+                    device = iterator;
+                    Log.d(TAG, "finding device: true");
+                    found = true;
+                    break;
+                }
+                Log.d(TAG, "bluetoothDevices: "+iterator.getAddress());
+            }
+        }
+        Log.d(TAG, "bluetoothEnabled: "+found);
+        return found;
+    }
+
+    public boolean bTconnect() {
+        boolean connected = true;
+
+        try {
+            socket = device.createRfcommSocketToServiceRecord(PORT_UUID); //Creates a socket to handle the outgoing connection
+            socket.connect();
+            Log.d(TAG, "createRfcommSocket: true");
+            Toast.makeText(getApplicationContext(),
+                    "Connection to bluetooth device successful", Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            connected = false;
+        }
+
+        if (connected) {
+            try {
+                outputStream = socket.getOutputStream(); //gets the output stream of the socket
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d(TAG, "bluetoothConnect:"+connected);
+        return connected;
+
+    }
+
+    private void sendMessage(String mess){
+
+//        try {
+            message = mess;
+            Log.d(TAG, "message: connected");
+//            outputStream.write(message.getBytes()); //transmits the value of command to the bluetooth module
+            Log.d(TAG, "sending message: "+message);
+            Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
 
 }
