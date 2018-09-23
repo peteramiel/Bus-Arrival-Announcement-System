@@ -84,28 +84,43 @@
                 android:textSize="15sp" />
 
             <LinearLayout
-                android:id="@+id/signUpLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="15sp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/signUpLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5sp"
-                    android:layout_marginRight="5sp"
-                    android:text="New User?" />
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15sp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5sp"
+                        android:layout_marginRight="5sp"
+                        android:text="New User?" />
+
+                    <Button
+                        android:id="@+id/goSignUpButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorTransparent"
+                        android:text="@string/sign_up"
+                        android:textColor="@color/colorPrimary" />
+
+                </LinearLayout>
 
                 <Button
-                    android:id="@+id/goSignUpButton"
+                    android:id="@+id/forgotPasswordButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorWhite"
-                    android:text="@string/sign_up"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/colorTransparent"
+                    android:text="Forgot Password?"
                     android:textColor="@color/colorPrimary" />
-
 
             </LinearLayout>
 
