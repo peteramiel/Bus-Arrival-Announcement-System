@@ -244,8 +244,8 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
+//                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+//                                    DEFAULT_ZOOM);
                             LatLng mLocation=new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             getNearMarker(mLocation);
 
