@@ -77,8 +77,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
                         finish();
                     }
                 }).create().show();
-
-        super.onBackPressed();
+;
     }
 
     @Override
