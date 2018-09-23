@@ -72,6 +72,7 @@ public class EditProfileActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
+        startActivity(new Intent(this, HomeActivity.class));
         finish();
         super.onBackPressed();
     }

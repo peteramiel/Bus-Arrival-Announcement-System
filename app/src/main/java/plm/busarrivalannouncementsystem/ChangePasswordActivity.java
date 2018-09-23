@@ -45,6 +45,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
+        startActivity(new Intent(this, HomeActivity.class));
         finish();
         super.onBackPressed();
     }

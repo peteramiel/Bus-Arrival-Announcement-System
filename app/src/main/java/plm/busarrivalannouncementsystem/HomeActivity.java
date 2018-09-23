@@ -1,12 +1,14 @@
 package plm.busarrivalannouncementsystem;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -60,6 +62,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
 //        startActivity(new Intent(this, HomeActivity.class));
 //        finish();
         //SHOULD LOGOUT
+        new AlertDialog.Builder(this)
+                .setTitle("Logout?")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences userPref = getSharedPreferences("User", 0);
+                        SharedPreferences.Editor editor = userPref.edit();
+                        editor.clear();
+                        editor.apply();
+                        mAuth.signOut();
+                        startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                        finish();
+                    }
+                }).create().show();
+
         super.onBackPressed();
     }
 
