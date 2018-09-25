@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +45,7 @@ public class ConnectBluetoothModule extends BaseActivity implements View.OnClick
     private DotProgressBar dotProgressBar;
     private EditText messageEditText;
     private TextView receivedMessageTextView;
+    MediaPlayer ring;
     Thread workerThread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class ConnectBluetoothModule extends BaseActivity implements View.OnClick
 
             }
         }
+        ring= MediaPlayer.create(ConnectBluetoothModule.this,R.raw.bus_stops);
     }
 
     public boolean bluetoothEnabled() {
@@ -198,14 +201,21 @@ public class ConnectBluetoothModule extends BaseActivity implements View.OnClick
 
         workerThread.start();
     }
-
+    private void playSound() {
+        try {
+            ring.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void sendMessage(){
         try {
             message = messageEditText.getText().toString();
             Log.d(TAG, "message: connected");
             outputStream.write(message.getBytes()); //transmits the value of command to the bluetooth module
             Log.d(TAG, "sending message: "+message);
-            Toast.makeText(getApplicationContext(),message.getBytes().toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+            playSound();
         } catch (IOException e) {
             e.printStackTrace();
         }
