@@ -15,6 +15,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -88,14 +89,6 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             init();
 
-//            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-//                @Override
-//                public void onMyLocationChange(Location location) {
-//
-//                    getDeviceLocation();
-//
-//                }
-//            });
         }
 //         Setting a click event handler for the map
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -137,7 +130,8 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
     private OutputStream outputStream;
     private BluetoothAdapter mBluetoothAdapter;
     private String message;
-
+    private String prev;
+    MediaPlayer ring;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,8 +160,8 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                500,
-                2, locationListenerGPS);
+                1000,
+                3, locationListenerGPS);
 
         popupNoBluetooth = new Dialog(MapsActivity.this);
         popupNoBluetooth.setContentView(R.layout.popup_no_bluetooth);
@@ -175,21 +169,39 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         popupNoBluetoothButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MapsActivity.this,ConnectBluetoothModule.class));
+                startActivity(new Intent(MapsActivity.this, ConnectBluetoothModule.class));
                 finish();
             }
         });
-        checkBluetooth();
+        if (bluetoothEnabled()) {
+            Log.d(TAG, "bluetoothEnabled: true");
+
+            if (bTconnect()) {
+                Log.d(TAG, "bTconnect: true;");
+            }
+            else{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Objects.requireNonNull(popupNoBluetooth.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    Log.d(TAG, "BLuetooth Adapter == null");
+                }
+            }
+        }else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                Objects.requireNonNull(popupNoBluetooth.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                Log.d(TAG, "BLuetooth Adapter == null");
+            }
+        }
+        ring= MediaPlayer.create(MapsActivity.this,R.raw.bus_stops);
     }
-    LocationListener locationListenerGPS=new LocationListener() {
+
+    LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(android.location.Location location) {
-            double latitude=location.getLatitude();
-            double longitude=location.getLongitude();
-            getNearMarker(new LatLng(location.getLatitude(),location.getLongitude()));
-            String msg="New Latitude: "+latitude + "New Longitude: "+longitude;
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            getNearMarker(new LatLng(location.getLatitude(), location.getLongitude()));
+            String msg = "New Latitude: " + latitude + "New Longitude: " + longitude;
             Log.d(TAG, msg);
-
         }
 
         @Override
@@ -207,12 +219,14 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
 
         }
     };
-    private void checkBluetooth(){
+
+    private void checkBluetooth() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             // Device doesn't support Bluetooth
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 Objects.requireNonNull(popupNoBluetooth.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                Log.d(TAG, "BLuetooth Adapter == null");
             }
             popupNoBluetooth.show();
         }
@@ -220,6 +234,7 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         if (!mBluetoothAdapter.isEnabled()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 Objects.requireNonNull(popupNoBluetooth.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                Log.d(TAG, "BLuetooth Adapter != enabled");
             }
             popupNoBluetooth.show();
         }
@@ -232,14 +247,14 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
                 Objects.requireNonNull(popupNoBluetooth.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
             popupNoBluetooth.show();
-        }else {
+        } else {
             for (BluetoothDevice iterator : bondedDevices) {
                 if (iterator.getAddress().equals(DEVICE_ADDRESS)) {
                     device = iterator;
                     Log.d(TAG, "finding device: true");
                     break;
                 }
-                Log.d(TAG, "bluetoothDevices: "+iterator.getAddress());
+                Log.d(TAG, "bluetoothDevices: " + iterator.getAddress());
             }
             boolean connected = true;
 
@@ -265,36 +280,110 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
                     e.printStackTrace();
                 }
             }
-            Log.d(TAG, "bluetoothConnect:"+connected);
+            Log.d(TAG, "bluetoothConnect:" + connected);
         }
     }
-    private void getNearMarker(LatLng latLng){
-        Log.d(TAG, "getNearMarker: "+latLng.latitude+","+latLng.longitude);
+
+    public boolean bluetoothEnabled() {
+        boolean found = false;
+        Log.d(TAG, "bluetoothEnabled: starting");
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            // Device doesn't support Bluetooth
+            Log.d(TAG, "bluetoothAdapter: null");
+            Toast.makeText(getApplicationContext(), "Device doesn't support bluetooth", Toast.LENGTH_SHORT).show();
+            found = false;
+        }
+
+        if (!mBluetoothAdapter.isEnabled()) {
+            Log.d(TAG, "bluetoothAdapter: disabled");
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, 0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Set<BluetoothDevice> bondedDevices = mBluetoothAdapter.getBondedDevices();
+
+        if (bondedDevices.isEmpty()) //Checks for paired bluetooth devices
+        {
+            Log.d(TAG, "bondedDevices: empty");
+            Toast.makeText(getApplicationContext(), "Please pair the device first", Toast.LENGTH_SHORT).show();
+        } else {
+            for (BluetoothDevice iterator : bondedDevices) {
+                if (iterator.getAddress().equals(DEVICE_ADDRESS)) {
+                    device = iterator;
+                    Log.d(TAG, "finding device: true");
+                    found = true;
+                    break;
+                }
+                Log.d(TAG, "bluetoothDevices: " + iterator.getAddress());
+            }
+        }
+        Log.d(TAG, "bluetoothEnabled: " + found);
+        return found;
+    }
+
+    public boolean bTconnect() {
+        boolean connected = true;
+
+        try {
+            socket = device.createRfcommSocketToServiceRecord(PORT_UUID); //Creates a socket to handle the outgoing connection
+            socket.connect();
+            Log.d(TAG, "createRfcommSocket: true");
+            Toast.makeText(getApplicationContext(),
+                    "Connection to bluetooth device successful", Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            connected = false;
+        }
+
+        if (connected) {
+            try {
+                outputStream = socket.getOutputStream(); //gets the output stream of the socket
+                Log.d(TAG, "socket: get input output stream");
+//                beginListenForData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d(TAG, "bluetoothConnect:" + connected);
+        return connected;
+
+    }
+
+    private void getNearMarker(LatLng latLng) {
+        Log.d(TAG, "getNearMarker: " + latLng.latitude + "," + latLng.longitude);
         //compare the current location to the markers in the arraylist
         for (LatLng marker : markerLatLongArrayList) {
             float[] distance = new float[1];
-            Log.d(TAG, "getNearMarker: markerArrayList"+marker.latitude+","+marker.longitude);
-            Log.d(TAG, "getNearMarker: markerCurrent"+latLng.latitude+","+latLng.longitude);
+            Log.d(TAG, "getNearMarker: markerArrayList" + marker.latitude + "," + marker.longitude);
+            Log.d(TAG, "getNearMarker: markerCurrent" + latLng.latitude + "," + latLng.longitude);
             Location.distanceBetween(marker.latitude, marker.longitude, latLng.latitude, latLng.longitude, distance);
             // distance[0] is now the distance between these lat/lons in meters
-            Log.d(TAG, "getNearMarker: distance = "+distance[0]);
+            Log.d(TAG, "getNearMarker: distance = " + distance[0]);
             if (distance[0] < 10.0) {
                 int index = markerLatLongArrayList.indexOf(marker);
-               sendMessage(markerNameArrayList.get(index));
-               Toast.makeText(getApplicationContext(),markerNameArrayList.get(index),Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "getNearMarker: sending message");
-//                try {
-//                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-//                    r.play();
-//                    Log.d(TAG, "playnotif " );
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
+                if (prev != markerNameArrayList.get(index)) {
+                    sendMessage(markerNameArrayList.get(index));
+                    prev = markerNameArrayList.get(index);
+                    Toast.makeText(getApplicationContext(), markerNameArrayList.get(index), Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "getNearMarker: sending message");
+                    playSound();
+                }
             }
         }
     }
 
+    private void playSound() {
+        try {
+            ring.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
@@ -311,9 +400,9 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-//                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-//                                    DEFAULT_ZOOM);
-                            LatLng mLocation=new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                    DEFAULT_ZOOM);
+                            LatLng mLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                             getNearMarker(mLocation);
 
                         } else {
@@ -339,13 +428,14 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         // Clears the previously touched position
 //        mMap.clear();
 
-        Log.d(TAG, "addNewMarker: adding stop "+ latLng.toString());
+        Log.d(TAG, "addNewMarker: adding stop " + latLng.toString());
 
         // Placing a marker on the touched position
         mMap.addMarker(markerOptions);
-        Log.d(TAG, "addNewMarker: added stop "+ latLng.toString());
+        Log.d(TAG, "addNewMarker: added stop " + latLng.toString());
 
     }
+
     private void addNewTerminalMarker(LatLng latLng, String newStopName) {
 
         // Creating a marker
@@ -359,15 +449,15 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
         // Clears the previously touched position
 //        mMap.clear();
 
-        Log.d(TAG, "addNewMarker: adding stop "+ latLng.toString());
+        Log.d(TAG, "addNewMarker: adding stop " + latLng.toString());
 
         // Placing a marker on the touched position
         mMap.addMarker(markerOptions);
-        Log.d(TAG, "addNewMarker: added stop "+ latLng.toString());
+        Log.d(TAG, "addNewMarker: added stop " + latLng.toString());
 
     }
 
-    private void saveNewMarkerToFireBase(LatLng latLng, String newStopName){
+    private void saveNewMarkerToFireBase(LatLng latLng, String newStopName) {
         //Save to Firebase
         FirebaseUser user = mAuth.getCurrentUser();
         String userId = user.getUid();
@@ -406,87 +496,73 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
                 return false;
             }
         });
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        @SuppressLint("MissingPermission") final Task location = mFusedLocationProviderClient.getLastLocation();
-        location.addOnCompleteListener(new OnCompleteListener() {
-            @Override
-            public void onComplete(@NonNull Task task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "onComplete: found location!");
-                    Location currentLocation = (Location) task.getResult();
-                    moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                            DEFAULT_ZOOM);
-                    LatLng mLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                    getNearMarker(mLocation);
-
-                } else {
-                    Log.d(TAG, "onComplete: current location is null");
-                    Toast.makeText(MapsActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        getDeviceLocation();
     }
 
-    private void getNewMarkersFromFirebase(){
+    private void getNewMarkersFromFirebase() {
         Log.d(TAG, "getNewMarkersFromDatabase: starting void");
 
-        mAuth= FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        final String userId=user.getUid();
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+userId+"/routes/"+routeName+"/stops");
-        Log.d(TAG, "getNewMarkersFromDatabase: myRef "+myRef.toString());
+        final String userId = user.getUid();
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/" + userId + "/routes/" + routeName + "/stops");
+        Log.d(TAG, "getNewMarkersFromDatabase: myRef " + myRef.toString());
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 markerLatLongArrayList.clear();
                 markerNameArrayList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if(ds.child("lat").getValue(Double.class)!=null && ds.child("long").getValue(Double.class)!=null){
+                    if (ds.child("lat").getValue(Double.class) != null && ds.child("long").getValue(Double.class) != null) {
                         LatLng latLng = new LatLng(ds.child("lat").getValue(Double.class),
                                 ds.child("long").getValue(Double.class));
                         String newStopName = ds.child("name").getValue(String.class);
                         markerNameArrayList.add(newStopName);
                         markerLatLongArrayList.add(latLng);
-                        Log.d(TAG, "getNewMarkersFromDatabase: adding marker to the ArrayList: "+latLng.toString() +" name:" + newStopName);
+                        Log.d(TAG, "getNewMarkersFromDatabase: adding marker to the ArrayList: " + latLng.toString() + " name:" + newStopName);
                         addNewMarker(latLng, newStopName);
-                        Log.d(TAG, "getNewMarkersFromDatabase: passing information latlng: "+latLng.toString() +" name:" + newStopName);
+                        Log.d(TAG, "getNewMarkersFromDatabase: passing information latlng: " + latLng.toString() + " name:" + newStopName);
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
-    private void getTerminalsFromFirebase(){
+
+    private void getTerminalsFromFirebase() {
         Log.d(TAG, "getTerminalsFromFirebase: staring void");
 
-        mAuth= FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
-        final String userId=user.getUid();
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/"+userId+"/routes/"+routeName+"/terminals");
+        final String userId = user.getUid();
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("users/" + userId + "/routes/" + routeName + "/terminals");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if(ds.child("lat").getValue(Double.class)!=null && ds.child("long").getValue(Double.class)!=null){
+                    if (ds.child("lat").getValue(Double.class) != null && ds.child("long").getValue(Double.class) != null) {
                         LatLng latLng = new LatLng(ds.child("lat").getValue(Double.class),
                                 ds.child("long").getValue(Double.class));
                         String newStopName = ds.child("name").getValue(String.class);
                         markerNameArrayList.add(newStopName);
                         markerLatLongArrayList.add(latLng);
-                        Log.d(TAG, "getTerminalsFromFirebase: adding marker to the ArrayList: "+latLng.toString() +" name:" + newStopName);
+                        Log.d(TAG, "getTerminalsFromFirebase: adding marker to the ArrayList: " + latLng.toString() + " name:" + newStopName);
                         addNewTerminalMarker(latLng, newStopName);
-                        Log.d(TAG, "getTerminalsFromFirebase: passing information latlng: "+latLng.toString() +" name:" + newStopName);
+                        Log.d(TAG, "getTerminalsFromFirebase: passing information latlng: " + latLng.toString() + " name:" + newStopName);
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
+
     private void setNewMarkerInformation(final LatLng latLng) {
 
         popupNewMarker = new Dialog(MapsActivity.this);
@@ -609,18 +685,18 @@ public class MapsActivity extends WizardBaseActivity implements OnMapReadyCallba
 
     //BLUUETOOTH
 
-    private void sendMessage(String mess){
+    private void sendMessage(String mess) {
 
-//        try {
+        try {
             message = mess;
             Log.d(TAG, "message: connected");
-//            outputStream.write(message.getBytes()); //transmits the value of command to the bluetooth module
-            Log.d(TAG, "sending message: "+message);
-            Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+            outputStream.write(message.getBytes()); //transmits the value of command to the bluetooth module
+            Log.d(TAG, "sending message: " + message);
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

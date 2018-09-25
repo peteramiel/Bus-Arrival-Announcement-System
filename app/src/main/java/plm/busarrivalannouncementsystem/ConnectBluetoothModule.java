@@ -128,7 +128,7 @@ public class ConnectBluetoothModule extends BaseActivity implements View.OnClick
                 outputStream = socket.getOutputStream(); //gets the output stream of the socket
                 inputStream = socket.getInputStream(); //gets the input stream of the socket
                 Log.d(TAG, "socket: get input output stream");
-                beginListenForData();
+//                beginListenForData();
             } catch (IOException e) {
                 e.printStackTrace();
             }
