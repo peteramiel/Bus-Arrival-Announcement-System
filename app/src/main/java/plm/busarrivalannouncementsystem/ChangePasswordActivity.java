@@ -64,7 +64,7 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     private boolean checkValidity() {
         boolean valid = true;
 
-
+        String oldpass = oldPass.getText().toString();
         String newpass = newPass.getText().toString();
         String verifypass = verifyPass.getText().toString();
         if (!newpass.equals(verifypass)) {
@@ -73,13 +73,16 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         } else if (newpass.length() < 7){
             valid = false;
             Toast.makeText(this, "Your password must at least have 7 characters", Toast.LENGTH_SHORT).show();
+        } else if(oldpass.length()<1){
+            valid = false;
+            oldpassWrapper.setError("Old Password is empty.");
         } else{
             verifypassWrapper.setError(null);
         }
 
         return valid;
 
-    }
+    } 
 
     private void savePassword() {
         if(!checkValidity()){
